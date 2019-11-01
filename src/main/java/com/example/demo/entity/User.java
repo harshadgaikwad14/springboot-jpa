@@ -13,8 +13,10 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.envers.Audited;
 
 @Entity
+@Audited
 public class User {
 
 	@Id
