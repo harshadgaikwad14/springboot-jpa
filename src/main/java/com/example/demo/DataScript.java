@@ -1,19 +1,30 @@
 package com.example.demo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Approver;
+import com.example.demo.entity.ContactPerson;
 import com.example.demo.entity.Privilege;
+import com.example.demo.entity.Project;
 import com.example.demo.entity.Role;
+import com.example.demo.entity.StudentM2M;
+import com.example.demo.entity.SubjectM2M;
 import com.example.demo.entity.User;
+import com.example.demo.repository.CommonAudit;
 import com.example.demo.service.ApproverService;
 import com.example.demo.service.PrivilegeService;
+import com.example.demo.service.ProjectService;
 import com.example.demo.service.RoleService;
+import com.example.demo.service.StudentM2MService;
+import com.example.demo.service.SubjectM2MService;
 import com.example.demo.service.UserService;
 
 @Component
@@ -30,6 +41,62 @@ public class DataScript {
 
 	@Autowired
 	private ApproverService approverService;
+
+	@Autowired
+	private StudentM2MService studentM2MService;
+
+	@Autowired
+	private SubjectM2MService subjectM2MService;
+
+	@Autowired
+	private ProjectService projectService;
+
+	public void project() {
+		createProject();
+	}
+
+	public void createProject() {
+
+		final Project project = new Project();
+		project.setName("Project1");
+		project.setDescription("Project1 Desc");
+		try {
+
+			String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+			project.setStartDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+			project.setEndDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		project.setAddress("Mumbai");
+		project.setRemark("Test");
+
+		final ContactPerson contactPerson = new ContactPerson();
+		contactPerson.setName("Harshad");
+		contactPerson.setEmailId("harshad.gaikwad@gmail.com");
+		contactPerson.setContactNo("9999999");
+		project.setContactPerson(contactPerson);
+		
+		final CommonAudit commonAudit = new CommonAudit();
+		commonAudit.setCreatedBy("System");
+		commonAudit.setCreatedAt(new Date());
+		project.setCommonAudit(commonAudit );
+		projectService.save(project);
+	}
+
+	public void createStudent() {
+
+		StudentM2M studentM2M = studentM2MService.findById(1l);
+		System.out.println("Student " + studentM2M);
+		System.out.println("Student " + studentM2M.getSubjectM2Ms());
+
+		SubjectM2M subjectM2M = subjectM2MService.findById(1l);
+		System.out.println("subjectM2M " + subjectM2M);
+		System.out.println("subjectM2M " + subjectM2M.getStudentM2Ms());
+
+	}
 
 	public void createPrivilege() {
 		final Privilege privilege1 = new Privilege();
@@ -84,8 +151,7 @@ public class DataScript {
 		role3.setPriviliges(privileges3);
 		final Role r3 = roleService.save(role3);
 		System.out.println("Role Created " + r3);
-		
-		
+
 	}
 
 	public void createApprover() {
@@ -95,14 +161,13 @@ public class DataScript {
 		approver0.setLevel(0l);
 		final Approver a0 = approverService.save(approver0);
 		System.out.println("Approver Created " + a0);
-		
+
 		final Approver approver1 = new Approver();
 		approver1.setUserName("harshad.gaikwad");
 		approver1.setLevel(1l);
 		final Approver a1 = approverService.save(approver1);
 		System.out.println("Approver Created " + a1);
-		
-		
+
 		final Approver approver4 = new Approver();
 		approver4.setUserName("harshad.gaikwad");
 		approver4.setLevel(2l);
@@ -144,7 +209,6 @@ public class DataScript {
 		user2.setRoles(Arrays.asList(role2));
 		final User u2 = userService.save(user2);
 		System.out.println("User Created " + u2);
-	
 
 	}
 
@@ -158,30 +222,27 @@ public class DataScript {
 		user1.setApprovers(Arrays.asList(a1));
 		final User u1 = userService.save(user1);
 		System.out.println("User Updated " + u1);
-		
-		
+
 		final Approver a2 = approverService.findByUserNameAndLevel("harshad.gaikwad", 1l);
 		final Approver a3 = approverService.findByUserNameAndLevel("pranshu.srivastav", 0l);
 		final User user2 = userService.findByUserName("pranshu.srivastav");
-		user2.setApprovers(Arrays.asList(a2,a3));
+		user2.setApprovers(Arrays.asList(a2, a3));
 		final User u2 = userService.save(user2);
 		System.out.println("User Updated " + u2);
 
 	}
-	
-	
-	public void getUser()
-	{
+
+	public void getUser() {
 		final User user1 = userService.findByUserName("harshad.gaikwad");
-		System.out.println("User : "+user1);
-		final Collection<Approver> approvers= user1.getApprovers();
+		System.out.println("User : " + user1);
+		final Collection<Approver> approvers = user1.getApprovers();
 		for (Approver approver : approvers) {
-			System.out.println("User approver : "+approver);
+			System.out.println("User approver : " + approver);
 		}
-		
-		final Collection<Role> roles= user1.getRoles();
+
+		final Collection<Role> roles = user1.getRoles();
 		for (Role role : roles) {
-			System.out.println("User role : "+role);
+			System.out.println("User role : " + role);
 		}
 	}
 

@@ -30,7 +30,6 @@ public class Role {
 	private Collection<User> users;
 
 	@ManyToMany
-	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "roles_priviliges", joinColumns = @JoinColumn(referencedColumnName = "id", name = "role_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "id"))
 	private Collection<Privilege> priviliges;
 
