@@ -13,9 +13,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.envers.Audited;
+
+import com.example.demo.repository.CommonAudit;
 
 @Entity
 @Audited
@@ -29,7 +31,7 @@ public class Vendor {
 	private String description;
 	private String gstNo;
 	private String address;
-	@OneToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "vendors_types", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "vendor_type_id", referencedColumnName = "id"))
 
 	private List<VendorType> vendorTypes;
@@ -48,6 +50,9 @@ public class Vendor {
 			@AttributeOverride(name = "contactNo", column = @Column(name = "cp_contact_no")),
 			@AttributeOverride(name = "emailId", column = @Column(name = "cp_email_id")) })
 	private ContactPerson contactPerson;
+
+	@Embedded
+	private CommonAudit commonAudit;
 
 	public Long getId() {
 		return id;
@@ -112,7 +117,14 @@ public class Vendor {
 	public void setContactPerson(ContactPerson contactPerson) {
 		this.contactPerson = contactPerson;
 	}
-	
+
+	public CommonAudit getCommonAudit() {
+		return commonAudit;
+	}
+
+	public void setCommonAudit(CommonAudit commonAudit) {
+		this.commonAudit = commonAudit;
+	}
 	
 
 }

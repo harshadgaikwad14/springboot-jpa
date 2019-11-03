@@ -1,13 +1,19 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.envers.Audited;
+
+import com.example.demo.repository.CommonAudit;
 
 @Entity
 @Audited
@@ -20,8 +26,11 @@ public class VendorType {
 	private String name;
 	private String description;
 	
-	@ManyToOne
-	private Vendor vendor;
+	@ManyToMany(mappedBy = "vendorTypes",fetch = FetchType.LAZY)
+	private List<Vendor> vendors;
+	
+	@Embedded
+	private CommonAudit commonAudit;
 
 	public Long getId() {
 		return id;
@@ -47,13 +56,23 @@ public class VendorType {
 		this.description = description;
 	}
 
-	public Vendor getVendor() {
-		return vendor;
+	public List<Vendor> getVendors() {
+		return vendors;
 	}
 
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
+	public void setVendors(List<Vendor> vendors) {
+		this.vendors = vendors;
 	}
+
+	public CommonAudit getCommonAudit() {
+		return commonAudit;
+	}
+
+	public void setCommonAudit(CommonAudit commonAudit) {
+		this.commonAudit = commonAudit;
+	}
+
+	
 	
 	
 

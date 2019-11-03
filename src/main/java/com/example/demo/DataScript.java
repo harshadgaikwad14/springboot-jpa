@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Approver;
 import com.example.demo.entity.Architect;
+import com.example.demo.entity.Bank;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.ContactPerson;
 import com.example.demo.entity.Privilege;
@@ -23,6 +24,8 @@ import com.example.demo.entity.Structural;
 import com.example.demo.entity.StudentM2M;
 import com.example.demo.entity.SubjectM2M;
 import com.example.demo.entity.User;
+import com.example.demo.entity.Vendor;
+import com.example.demo.entity.VendorType;
 import com.example.demo.repository.CommonAudit;
 import com.example.demo.service.ApproverService;
 import com.example.demo.service.PrivilegeService;
@@ -31,6 +34,8 @@ import com.example.demo.service.RoleService;
 import com.example.demo.service.StudentM2MService;
 import com.example.demo.service.SubjectM2MService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.VendorService;
+import com.example.demo.service.VendorTypeService;
 
 @Component
 public class DataScript {
@@ -54,10 +59,76 @@ public class DataScript {
 	private SubjectM2MService subjectM2MService;
 
 	@Autowired
+	private VendorTypeService vendorTypeService;
+
+	@Autowired
+	private VendorService vendorService;
+
+	@Autowired
 	private ProjectService projectService;
 
 	public void project() {
 		createProject();
+	}
+
+	public void vendorType() {
+		createVendorType();
+	}
+
+	public void vendor() {
+		createVendor();
+	}
+
+	private void createVendor() {
+		List<VendorType> vendorTypes = vendorTypeService.findAll();
+
+		Bank bank1 = new Bank();
+		bank1.setName("HDFC");
+		bank1.setBranchName("Goregaaon");
+		bank1.setAccountNo("1534879");
+		bank1.setIfscCode("HDFC40001");
+		bank1.setMicrCode("25448");
+
+		ContactPerson contactPerson1 = new ContactPerson();
+		contactPerson1.setName("Harshad");
+		contactPerson1.setContactNo("681012131");
+		contactPerson1.setEmailId("harshad.gaikwad@gmail.com");
+
+		Vendor vendor1 = new Vendor();
+		vendor1.setName("Vendor1");
+		vendor1.setDescription("vendor1");
+		vendor1.setGstNo("gst12345");
+		vendor1.setAddress("Mumbai");
+
+		vendor1.setBank(bank1);
+
+		vendor1.setContactPerson(contactPerson1);
+		vendor1.setVendorTypes(vendorTypes);
+		final CommonAudit commonAudit = new CommonAudit();
+		commonAudit.setCreatedBy("System");
+		commonAudit.setCreatedAt(new Date());
+		vendor1.setCommonAudit(commonAudit);
+		vendorService.save(vendor1);
+	}
+
+	private void createVendorType() {
+
+		final CommonAudit commonAudit = new CommonAudit();
+		commonAudit.setCreatedBy("System");
+		commonAudit.setCreatedAt(new Date());
+
+		VendorType vendorType1 = new VendorType();
+		vendorType1.setName("Goods");
+		vendorType1.setDescription("Goods");
+
+		vendorType1.setCommonAudit(commonAudit);
+		vendorTypeService.save(vendorType1);
+
+		VendorType vendorType2 = new VendorType();
+		vendorType2.setName("Services");
+		vendorType2.setDescription("Services");
+		vendorType2.setCommonAudit(commonAudit);
+		vendorTypeService.save(vendorType2);
 	}
 
 	public void createProject() {
@@ -78,38 +149,35 @@ public class DataScript {
 		project.setAddress("Mumbai");
 		project.setRemark("Test");
 		project.setSubDivisionName("Goregaon");
-		
-		
 
 		final ContactPerson contactPerson = new ContactPerson();
 		contactPerson.setName("Harshad");
 		contactPerson.setEmailId("harshad.gaikwad@gmail.com");
 		contactPerson.setContactNo("9999999");
 		project.setContactPerson(contactPerson);
-		
-		
+
 		final Client client = new Client();
 		client.setName("client_Harshad");
 		client.setEmailId("charshad.gaikwad@gmail.com");
 		client.setContactNo("9999999");
 		project.setClient(client);
-		
+
 		final Architect architect = new Architect();
 		architect.setName("architect_Harshad");
 		architect.setEmailId("aharshad.gaikwad@gmail.com");
 		architect.setContactNo("9999999");
 		project.setArchitect(architect);
-		
+
 		final Structural structural = new Structural();
 		structural.setName("structural_Harshad");
 		structural.setEmailId("sharshad.gaikwad@gmail.com");
 		structural.setContactNo("9999999");
 		project.setStructural(structural);
-		
+
 		final CommonAudit commonAudit = new CommonAudit();
 		commonAudit.setCreatedBy("System");
 		commonAudit.setCreatedAt(new Date());
-		project.setCommonAudit(commonAudit );
+		project.setCommonAudit(commonAudit);
 		projectService.save(project);
 	}
 
