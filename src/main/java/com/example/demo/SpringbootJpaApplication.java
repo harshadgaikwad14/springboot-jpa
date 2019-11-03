@@ -25,6 +25,9 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		dataScript.createUser();
 		dataScript.vendorType();
 		dataScript.vendor();
+		dataScript.unit();
+		dataScript.grade();
+		dataScript.item();
 		//dataScript.updateUser();
 		// dataScript.getUser();
 

@@ -17,22 +17,28 @@ import com.example.demo.entity.Architect;
 import com.example.demo.entity.Bank;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.ContactPerson;
+import com.example.demo.entity.Grade;
+import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Structural;
 import com.example.demo.entity.StudentM2M;
 import com.example.demo.entity.SubjectM2M;
+import com.example.demo.entity.Unit;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Vendor;
 import com.example.demo.entity.VendorType;
 import com.example.demo.repository.CommonAudit;
 import com.example.demo.service.ApproverService;
+import com.example.demo.service.GradeService;
+import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
 import com.example.demo.service.ProjectService;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.StudentM2MService;
 import com.example.demo.service.SubjectM2MService;
+import com.example.demo.service.UnitService;
 import com.example.demo.service.UserService;
 import com.example.demo.service.VendorService;
 import com.example.demo.service.VendorTypeService;
@@ -67,6 +73,15 @@ public class DataScript {
 	@Autowired
 	private ProjectService projectService;
 
+	@Autowired
+	private ItemService itemService;
+
+	@Autowired
+	private GradeService gradeService;
+
+	@Autowired
+	private UnitService unitService;
+
 	public void project() {
 		createProject();
 	}
@@ -77,6 +92,88 @@ public class DataScript {
 
 	public void vendor() {
 		createVendor();
+	}
+
+	public void item() {
+		createItem();
+		updateItem_Grade();
+	}
+
+	public void grade() {
+		createGrade();
+		updateGrade_Unit();
+	}
+
+	public void unit() {
+		createUnit();
+	}
+
+	private CommonAudit getCreateCommonAudit() {
+		final CommonAudit commonAudit = new CommonAudit();
+		commonAudit.setCreatedBy("System");
+		commonAudit.setCreatedAt(new Date());
+		return commonAudit;
+	}
+
+	private void createItem() {
+		for (int i = 1; i <= 5; i++) {
+
+			Item item = new Item();
+			item.setName("Item" + i);
+			item.setDescription("Item" + i);
+			item.setCommonAudit(getCreateCommonAudit());
+			itemService.save(item);
+		}
+	}
+
+	@Transactional
+	private void updateItem_Grade() {
+
+		final List<Item> items = itemService.findAll();
+		final List<Grade> grades = gradeService.findAll();
+
+		for (Item item : items) {
+
+			item.setGrades(grades);
+			itemService.save(item);
+		}
+
+	}
+
+	@Transactional
+	private void updateGrade_Unit() {
+
+		final List<Grade> grades = gradeService.findAll();
+		final List<Unit> units = unitService.findAll();
+
+		for (Grade grade : grades) {
+
+			grade.setUnits(units);
+			gradeService.save(grade);
+		}
+
+	}
+
+	private void createGrade() {
+		for (int i = 1; i <= 5; i++) {
+
+			Grade grade = new Grade();
+			grade.setName("Grade" + i);
+			grade.setDescription("Grade" + i);
+			grade.setCommonAudit(getCreateCommonAudit());
+			gradeService.save(grade);
+		}
+	}
+
+	private void createUnit() {
+		for (int i = 1; i <= 5; i++) {
+
+			Unit unit = new Unit();
+			unit.setName("Unit" + i);
+			unit.setDescription("Unit" + i);
+			unit.setCommonAudit(getCreateCommonAudit());
+			unitService.save(unit);
+		}
 	}
 
 	private void createVendor() {
