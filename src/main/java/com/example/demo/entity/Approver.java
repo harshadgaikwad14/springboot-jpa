@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ public class Approver {
 	private String userName;
 	private Long level;
 	private String description;
-	@ManyToMany(mappedBy = "approvers")
+	@ManyToMany(mappedBy = "approvers", fetch = FetchType.LAZY)
 	private Collection<User> users;
 
 	public Long getId() {

@@ -33,17 +33,17 @@ public class User {
 	private boolean enabled;
 	private boolean tokenExpired;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_approvers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"))
 	private Collection<Approver> approvers;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_projects", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
 	private Collection<Project> projects;
@@ -128,4 +128,13 @@ public class User {
 		this.approvers = approvers;
 	}
 
+	public Collection<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Collection<Project> projects) {
+		this.projects = projects;
+	}
+
+	
 }

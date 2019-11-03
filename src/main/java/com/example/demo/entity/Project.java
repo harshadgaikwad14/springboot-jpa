@@ -44,7 +44,26 @@ public class Project {
 			@AttributeOverride(name = "contactNo", column = @Column(name = "cp_contact_no")),
 			@AttributeOverride(name = "emailId", column = @Column(name = "cp_email_id")) })
 	private ContactPerson contactPerson;
+	
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "client_name")),
+			@AttributeOverride(name = "contactNo", column = @Column(name = "client_contact_no")),
+			@AttributeOverride(name = "emailId", column = @Column(name = "client_email_id")) })
+	private Client client;
+	
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "architect_name")),
+			@AttributeOverride(name = "contactNo", column = @Column(name = "architect_contact_no")),
+			@AttributeOverride(name = "emailId", column = @Column(name = "architect_email_id")) })
+	private Architect architect;
 
+	
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "structural_name")),
+			@AttributeOverride(name = "contactNo", column = @Column(name = "structural_contact_no")),
+			@AttributeOverride(name = "emailId", column = @Column(name = "structural_email_id")) })
+	private Structural structural;
+	
 	@ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
 	private List<User> users = new ArrayList<User>();
 
@@ -138,6 +157,30 @@ public class Project {
 
 	public void setCommonAudit(CommonAudit commonAudit) {
 		this.commonAudit = commonAudit;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public Architect getArchitect() {
+		return architect;
+	}
+
+	public void setArchitect(Architect architect) {
+		this.architect = architect;
+	}
+
+	public Structural getStructural() {
+		return structural;
+	}
+
+	public void setStructural(Structural structural) {
+		this.structural = structural;
 	}
 
 	

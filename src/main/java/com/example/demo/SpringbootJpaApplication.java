@@ -18,13 +18,14 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		/*
-		 * dataScript.createApprover(); dataScript.createPrivilege();
-		 * dataScript.createRole(); dataScript.createUser(); dataScript.updateUser();
-		 * dataScript.getUser();
-		 */
-		
+		dataScript.createApprover();
+		dataScript.createPrivilege();
+		dataScript.createRole();
 		dataScript.project();
+		dataScript.createUser();
+		//dataScript.updateUser();
+		// dataScript.getUser();
+
 		
 
 	}

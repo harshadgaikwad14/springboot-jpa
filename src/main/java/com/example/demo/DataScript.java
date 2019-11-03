@@ -7,14 +7,19 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Approver;
+import com.example.demo.entity.Architect;
+import com.example.demo.entity.Client;
 import com.example.demo.entity.ContactPerson;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.Role;
+import com.example.demo.entity.Structural;
 import com.example.demo.entity.StudentM2M;
 import com.example.demo.entity.SubjectM2M;
 import com.example.demo.entity.User;
@@ -72,12 +77,34 @@ public class DataScript {
 		}
 		project.setAddress("Mumbai");
 		project.setRemark("Test");
+		project.setSubDivisionName("Goregaon");
+		
+		
 
 		final ContactPerson contactPerson = new ContactPerson();
 		contactPerson.setName("Harshad");
 		contactPerson.setEmailId("harshad.gaikwad@gmail.com");
 		contactPerson.setContactNo("9999999");
 		project.setContactPerson(contactPerson);
+		
+		
+		final Client client = new Client();
+		client.setName("client_Harshad");
+		client.setEmailId("charshad.gaikwad@gmail.com");
+		client.setContactNo("9999999");
+		project.setClient(client);
+		
+		final Architect architect = new Architect();
+		architect.setName("architect_Harshad");
+		architect.setEmailId("aharshad.gaikwad@gmail.com");
+		architect.setContactNo("9999999");
+		project.setArchitect(architect);
+		
+		final Structural structural = new Structural();
+		structural.setName("structural_Harshad");
+		structural.setEmailId("sharshad.gaikwad@gmail.com");
+		structural.setContactNo("9999999");
+		project.setStructural(structural);
 		
 		final CommonAudit commonAudit = new CommonAudit();
 		commonAudit.setCreatedBy("System");
@@ -182,9 +209,11 @@ public class DataScript {
 
 	}
 
+	@Transactional
 	public void createUser() {
 
 		final List<Role> roles = roleService.findAll();
+		final List<Project> projects = projectService.findAll();
 		final User user1 = new User();
 		user1.setUserName("harshad.gaikwad");
 		user1.setFirstName("Harshad");
@@ -194,21 +223,19 @@ public class DataScript {
 		user1.setPassword("password");
 		user1.setTokenExpired(false);
 		user1.setRoles(roles);
+		user1.setProjects(projects);
 		final User u1 = userService.save(user1);
 		System.out.println("User Created " + u1);
 
-		final Role role2 = roleService.findByName("ROLE_USER");
-		final User user2 = new User();
-		user2.setUserName("pranshu.srivastav");
-		user2.setFirstName("Pranshu");
-		user2.setLastName("Shrivastav");
-		user2.setEmail("pranshu.shrivastav@gmail.com");
-		user2.setEnabled(true);
-		user2.setPassword("password");
-		user2.setTokenExpired(false);
-		user2.setRoles(Arrays.asList(role2));
-		final User u2 = userService.save(user2);
-		System.out.println("User Created " + u2);
+		/*
+		 * final Role role2 = roleService.findByName("ROLE_USER"); final User user2 =
+		 * new User(); user2.setUserName("pranshu.srivastav");
+		 * user2.setFirstName("Pranshu"); user2.setLastName("Shrivastav");
+		 * user2.setEmail("pranshu.shrivastav@gmail.com"); user2.setEnabled(true);
+		 * user2.setPassword("password"); user2.setTokenExpired(false);
+		 * user2.setRoles(Arrays.asList(role2)); final User u2 =
+		 * userService.save(user2); System.out.println("User Created " + u2);
+		 */
 
 	}
 

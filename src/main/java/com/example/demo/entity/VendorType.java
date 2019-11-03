@@ -1,31 +1,27 @@
 package com.example.demo.entity;
 
-import java.util.Collection;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
-public class Privilege {
-
+public class VendorType {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
-	@ManyToMany(mappedBy = "priviliges", fetch = FetchType.LAZY)
-	private Collection<Role> roles;
-
 	
+	@ManyToOne
+	private Vendor vendor;
 
 	public Long getId() {
 		return id;
@@ -51,19 +47,14 @@ public class Privilege {
 		this.description = description;
 	}
 
-	public Collection<Role> getRoles() {
-		return roles;
+	public Vendor getVendor() {
+		return vendor;
 	}
 
-	public void setRoles(Collection<Role> roles) {
-		this.roles = roles;
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
-
 	
-	@Override
-	public String toString() {
-		return "Privilege [id=" + id + ", name=" + name + ", description=" + description + "]";
-	}
 	
 
 }
