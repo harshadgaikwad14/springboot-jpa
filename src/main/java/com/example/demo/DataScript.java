@@ -97,6 +97,7 @@ public class DataScript {
 	public void item() {
 		createItem();
 		updateItem_Grade();
+		getAllItem();
 	}
 
 	public void grade() {
@@ -113,6 +114,18 @@ public class DataScript {
 		commonAudit.setCreatedBy("System");
 		commonAudit.setCreatedAt(new Date());
 		return commonAudit;
+	}
+
+	@Transactional
+	private void getAllItem() {
+		final List<Item> items = itemService.findAll();
+		for (Item item : items) {
+
+			
+			System.out.println("Item : "+item);
+			System.out.println("Item : "+item.getGrades());
+		}
+
 	}
 
 	private void createItem() {

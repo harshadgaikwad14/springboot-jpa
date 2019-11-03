@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,10 +29,10 @@ public class Grade {
 	private String name;
 	private String description;
 	
-	@ManyToMany(mappedBy = "grades",fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "grades")
 	private Collection<Item> items;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "grades_units", joinColumns = @JoinColumn(referencedColumnName = "id", name = "grade_id"), inverseJoinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id"))
 	private Collection<Unit> units;
 	
@@ -87,6 +88,19 @@ public class Grade {
 	public void setUnits(Collection<Unit> units) {
 		this.units = units;
 	}
+
+	@Override
+	public String toString() {
+		return "Grade [id=" + id + ", name=" + name + ", description=" + description + ", commonAudit=" + commonAudit
+				+ "]";
+	}
+
+	/*
+	 * @Override public String toString() { return "Grade [id=" + id + ", name=" +
+	 * name + ", description=" + description + ", units=" + units + ", commonAudit="
+	 * + commonAudit + "]"; }
+	 */
+	
 	
 	
 

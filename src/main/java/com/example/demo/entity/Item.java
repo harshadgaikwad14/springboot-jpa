@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,7 +29,7 @@ public class Item {
 	private String name;
 	private String description;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "items_grades", joinColumns = @JoinColumn(referencedColumnName = "id", name = "item_id"), inverseJoinColumns = @JoinColumn(name = "grade_id", referencedColumnName = "id"))
 	private Collection<Grade> grades;
 
@@ -74,6 +75,19 @@ public class Item {
 	public void setGrades(Collection<Grade> grades) {
 		this.grades = grades;
 	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", name=" + name + ", description=" + description + ", commonAudit=" + commonAudit
+				+ "]";
+	}
+
+	/*
+	 * @Override public String toString() { return "Item [id=" + id + ", name=" +
+	 * name + ", description=" + description + ", grades=" + grades +
+	 * ", commonAudit=" + commonAudit + "]"; }
+	 */
+	
 	
 
 }

@@ -26,7 +26,7 @@ public class Unit {
 	private String name;
 	private String description;
 	
-	@ManyToMany(mappedBy = "units",fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "units")
 	private Collection<Grade> grades;
 
 	@Embedded
@@ -71,6 +71,20 @@ public class Unit {
 	public void setGrades(Collection<Grade> grades) {
 		this.grades = grades;
 	}
+
+	@Override
+	public String toString() {
+		return "Unit [id=" + id + ", name=" + name + ", description=" + description + ", commonAudit=" + commonAudit
+				+ "]";
+	}
+
+	/*
+	 * @Override public String toString() { return "Unit [id=" + id + ", name=" +
+	 * name + ", description=" + description + ", commonAudit=" + commonAudit + "]";
+	 * }
+	 */
+	
+	
 	
 
 }
