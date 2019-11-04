@@ -34,17 +34,14 @@ public class User {
 	private boolean tokenExpired;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_approvers", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "approver_id", referencedColumnName = "id"))
 	private Collection<Approver> approvers;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "users_projects", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"))
 	private Collection<Project> projects;
 
@@ -135,6 +132,15 @@ public class User {
 	public void setProjects(Collection<Project> projects) {
 		this.projects = projects;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", password=" + password + ", enabled=" + enabled + ", tokenExpired="
+				+ tokenExpired + "]";
+	}
+	
+	
 
 	
 }

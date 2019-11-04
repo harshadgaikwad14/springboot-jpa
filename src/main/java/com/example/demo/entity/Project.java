@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -64,9 +66,11 @@ public class Project {
 	
 	@ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
 	private List<User> users = new ArrayList<User>();
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
+	private List<Requisition> requisitions = new ArrayList<Requisition>();
 
 	@Embedded
-
 	private CommonAudit commonAudit;
 
 	public Long getId() {
@@ -180,6 +184,23 @@ public class Project {
 	public void setStructural(Structural structural) {
 		this.structural = structural;
 	}
+
+	public List<Requisition> getRequisitions() {
+		return requisitions;
+	}
+
+	public void setRequisitions(List<Requisition> requisitions) {
+		this.requisitions = requisitions;
+	}
+
+	@Override
+	public String toString() {
+		return "Project [id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", subDivisionName=" + subDivisionName + ", remark=" + remark + ", address="
+				+ address + ", contactPerson=" + contactPerson + ", client=" + client + ", architect=" + architect
+				+ ", structural=" + structural + ", commonAudit=" + commonAudit + "]";
+	}
+	
 
 	
 }

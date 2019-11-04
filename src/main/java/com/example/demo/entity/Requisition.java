@@ -10,6 +10,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,6 +35,10 @@ public class Requisition {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "requisition")
 	private List<RequisitionItem> requisitionItems;
 
+	@ManyToOne
+	@JoinColumn(name = "project_id" ,referencedColumnName = "id")
+	private Project project;
+	
 	private String remark;
 
 	public Long getId() {
@@ -81,6 +89,18 @@ public class Requisition {
 
 	public void setRequisitionItems(List<RequisitionItem> requisitionItems) {
 		this.requisitionItems = requisitionItems;
+	}
+	
+	
+
+	
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	@Override

@@ -182,9 +182,16 @@ public class DataScript {
 		
 		
 		requisition2.setRequisitionItems(requisitionItems3);
-
+		
+		Project p = projectService.findByName("Project1");
+		requisition2.setProject(p);
 		requisitionService.save(requisition2);
 
+		Requisition requisition3 = requisitionService.findByName("Requisition1");
+		System.out.println("****** LAST getRequisition >>> " + requisition3);
+		final Project p3= requisition3.getProject();
+		System.out.println("****** LAST getRequisition Project >>> " + p3);
+		System.out.println("****** LAST getRequisition Users >>> " + p3.getUsers());
 		
 		
 	}
