@@ -32,6 +32,8 @@ import com.example.demo.entity.SubjectM2M;
 import com.example.demo.entity.Unit;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Vendor;
+import com.example.demo.entity.VendorRequisition;
+import com.example.demo.entity.VendorRequisitionItem;
 import com.example.demo.entity.VendorType;
 import com.example.demo.service.ApproverService;
 import com.example.demo.service.GradeService;
@@ -45,6 +47,8 @@ import com.example.demo.service.StudentM2MService;
 import com.example.demo.service.SubjectM2MService;
 import com.example.demo.service.UnitService;
 import com.example.demo.service.UserService;
+import com.example.demo.service.VendorRequisitionItemService;
+import com.example.demo.service.VendorRequisitionService;
 import com.example.demo.service.VendorService;
 import com.example.demo.service.VendorTypeService;
 
@@ -93,6 +97,12 @@ public class DataScript {
 	@Autowired
 	private RequisitionItemService requisitionItemService;
 
+	@Autowired
+	private VendorRequisitionService vendorRequisitionService;
+
+	@Autowired
+	private VendorRequisitionItemService vendorRequisitionItemService;
+
 	public void project() {
 		createProject();
 	}
@@ -127,7 +137,16 @@ public class DataScript {
 	public void requisition() {
 		createRequisition_RequisitionItems();
 		getRequisition();
-		
+
+	}
+
+	public void vendorRequisition() {
+		createVendorRequisition();
+	}
+	
+	public void vendorRequisitionItem()
+	{
+		createVendorRequisitionItem();
 	}
 
 	private CommonAudit getCreateCommonAudit() {
@@ -135,6 +154,30 @@ public class DataScript {
 		commonAudit.setCreatedBy("System");
 		commonAudit.setCreatedAt(new Date());
 		return commonAudit;
+	}
+
+	private void createVendorRequisitionItem() {
+
+		Requisition requisition = requisitionService.findByName("Requisition1");
+		List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
+		Vendor vendor = vendorService.findByName("Vendor1");
+		for (RequisitionItem requisitionItem : requisitionItems) {
+
+			VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
+			vendorRequisitionItem.setRequisitionItem(requisitionItem);
+			vendorRequisitionItem.setVendor(vendor);
+			vendorRequisitionItemService.save(vendorRequisitionItem);
+		}
+	}
+
+	private void createVendorRequisition() {
+
+		Requisition requisition = requisitionService.findByName("Requisition1");
+		Vendor vendor = vendorService.findByName("Vendor1");
+		VendorRequisition vendorRequisition = new VendorRequisition();
+		vendorRequisition.setRequisition(requisition);
+		vendorRequisition.setVendor(vendor);
+		vendorRequisitionService.save(vendorRequisition);
 	}
 
 	@Transactional
@@ -150,15 +193,14 @@ public class DataScript {
 			}
 
 		}
-		
+
 		Requisition requisition2 = requisitionService.findByName("Requisition1");
 		System.out.println("****** After getRequisition >>> " + requisition2);
 		List<RequisitionItem> requisitionItems2 = (List<RequisitionItem>) requisition2.getRequisitionItems();
 		for (RequisitionItem requisitionItem2 : requisitionItems2) {
 			System.out.println("****** After requisitionItem >>> " + requisitionItem2);
 		}
-		
-		
+
 		final List<RequisitionItem> requisitionItems3 = new ArrayList<>();
 		for (int i = 10; i <= 15; i++) {
 
@@ -179,21 +221,18 @@ public class DataScript {
 			requisitionItems3.add(requisitionItem);
 		}
 
-		
-		
 		requisition2.setRequisitionItems(requisitionItems3);
-		
+
 		Project p = projectService.findByName("Project1");
 		requisition2.setProject(p);
 		requisitionService.save(requisition2);
 
 		Requisition requisition3 = requisitionService.findByName("Requisition1");
 		System.out.println("****** LAST getRequisition >>> " + requisition3);
-		final Project p3= requisition3.getProject();
+		final Project p3 = requisition3.getProject();
 		System.out.println("****** LAST getRequisition Project >>> " + p3);
 		System.out.println("****** LAST getRequisition Users >>> " + p3.getUsers());
-		
-		
+
 	}
 
 	@Transactional
@@ -203,7 +242,6 @@ public class DataScript {
 
 	@Transactional
 	private void createRequisition_RequisitionItems() {
-		
 
 		final Requisition requisition = new Requisition();
 		requisition.setName("Requisition1");
@@ -239,8 +277,6 @@ public class DataScript {
 			requisitionItems.add(requisitionItem);
 		}
 
-		
-		
 		requisition.setRequisitionItems(requisitionItems);
 
 		requisitionService.save(requisition);

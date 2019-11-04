@@ -15,8 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -39,7 +37,7 @@ public class Grade {
 	@JoinTable(name = "grades_units", joinColumns = @JoinColumn(referencedColumnName = "id", name = "grade_id"), inverseJoinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id"))
 	private Collection<Unit> units;
 
-	@OneToOne
+	@OneToOne(mappedBy = "grade")
 	private RequisitionItem requisitionItem;
 
 	@Embedded

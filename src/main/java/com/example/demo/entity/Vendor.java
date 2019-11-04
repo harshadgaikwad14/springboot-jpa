@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -48,6 +49,11 @@ public class Vendor {
 			@AttributeOverride(name = "contactNo", column = @Column(name = "cp_contact_no")),
 			@AttributeOverride(name = "emailId", column = @Column(name = "cp_email_id")) })
 	private ContactPerson contactPerson;
+	
+	@OneToOne(mappedBy = "vendor")
+	private VendorRequisition vendorRequisition;
+	@OneToOne(mappedBy = "vendor")
+	private VendorRequisitionItem vendorRequisitionItem;
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -122,6 +128,14 @@ public class Vendor {
 
 	public void setCommonAudit(CommonAudit commonAudit) {
 		this.commonAudit = commonAudit;
+	}
+
+	public VendorRequisition getVendorRequisition() {
+		return vendorRequisition;
+	}
+
+	public void setVendorRequisition(VendorRequisition vendorRequisition) {
+		this.vendorRequisition = vendorRequisition;
 	}
 	
 

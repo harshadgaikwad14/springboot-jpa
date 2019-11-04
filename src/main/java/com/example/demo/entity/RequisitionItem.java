@@ -1,11 +1,7 @@
 package com.example.demo.entity;
 
-import java.util.Collection;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,6 +33,9 @@ public class RequisitionItem {
 	@ManyToOne
 	@JoinColumn(name = "requisition_id" ,referencedColumnName = "id")
 	private Requisition requisition;
+	
+	@OneToOne(mappedBy = "requisitionItem")
+	private VendorRequisitionItem vendorRequisitionItem;
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -103,6 +102,15 @@ public class RequisitionItem {
 
 	public void setRequisition(Requisition requisition) {
 		this.requisition = requisition;
+	}
+	
+
+	public VendorRequisitionItem getVendorRequisitionItem() {
+		return vendorRequisitionItem;
+	}
+
+	public void setVendorRequisitionItem(VendorRequisitionItem vendorRequisitionItem) {
+		this.vendorRequisitionItem = vendorRequisitionItem;
 	}
 
 	@Override

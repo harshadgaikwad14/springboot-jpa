@@ -30,6 +30,8 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 		dataScript.item();
 		dataScript.requisitionItem();
 		dataScript.requisition();
+		dataScript.vendorRequisition();
+		//dataScript.vendorRequisitionItem();
 		//dataScript.updateUser();
 		// dataScript.getUser();
 

@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import java.util.Collection;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -13,8 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -28,11 +25,10 @@ public class Unit {
 	private String name;
 	private String description;
 
-	@ManyToMany(mappedBy = "units",fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.TRUE)
+	@ManyToMany(mappedBy = "units", fetch = FetchType.LAZY)
 	private Collection<Grade> grades;
 
-	@OneToOne
+	@OneToOne(mappedBy = "unit")
 	private RequisitionItem requisitionItem;
 
 	@Embedded
@@ -91,9 +87,5 @@ public class Unit {
 		return "Unit [id=" + id + ", name=" + name + ", description=" + description + ", commonAudit=" + commonAudit
 				+ "]";
 	}
-
-	
-	
-	
 
 }

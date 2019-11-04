@@ -11,10 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -36,10 +35,13 @@ public class Requisition {
 	private List<RequisitionItem> requisitionItems;
 
 	@ManyToOne
-	@JoinColumn(name = "project_id" ,referencedColumnName = "id")
+	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private Project project;
-	
+
 	private String remark;
+
+	@OneToOne(mappedBy = "requisition")
+	private VendorRequisition vendorRequisition;
 
 	public Long getId() {
 		return id;
@@ -81,8 +83,6 @@ public class Requisition {
 		this.remark = remark;
 	}
 
-	
-
 	public List<RequisitionItem> getRequisitionItems() {
 		return requisitionItems;
 	}
@@ -90,10 +90,6 @@ public class Requisition {
 	public void setRequisitionItems(List<RequisitionItem> requisitionItems) {
 		this.requisitionItems = requisitionItems;
 	}
-	
-	
-
-	
 
 	public Project getProject() {
 		return project;
@@ -108,5 +104,15 @@ public class Requisition {
 		return "Requisition [id=" + id + ", name=" + name + ", description=" + description + ", expectedDeliveryAt="
 				+ expectedDeliveryAt + ", remark=" + remark + "]";
 	}
+
+	public VendorRequisition getVendorRequisition() {
+		return vendorRequisition;
+	}
+
+	public void setVendorRequisition(VendorRequisition vendorRequisition) {
+		this.vendorRequisition = vendorRequisition;
+	}
+	
+	
 
 }
