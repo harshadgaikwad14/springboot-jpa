@@ -23,8 +23,23 @@ public class ItemService {
 	}
 
 	public List<Item> findAll() {
-
 		return (List<Item>) itemRepository.findAll();
+	}
+
+	public void delete(final Item item) {
+		itemRepository.delete(item);
+	}
+
+	public Item findById(final Long id) {
+		return itemRepository.findById(id).get();
+	}
+
+	public List<Item> findAll(final Long id) {
+		return (List<Item>) itemRepository.findAll();
+	}
+
+	public List<Item> findAllById(final List<Long> ids) {
+		return (List<Item>) itemRepository.findAllById(ids);
 	}
 
 }

@@ -22,12 +22,24 @@ public class ProjectService {
 		return projectRepository.findByName(name);
 	}
 
+	public List<Project> findAll() {
+		return (List<Project>) projectRepository.findAll();
+	}
+
+	public void delete(final Project project) {
+		projectRepository.delete(project);
+	}
+
 	public Project findById(final Long id) {
 		return projectRepository.findById(id).get();
 	}
 
-	public List<Project> findAll() {
+	public List<Project> findAll(final Long id) {
 		return (List<Project>) projectRepository.findAll();
+	}
+
+	public List<Project> findAllById(final List<Long> ids) {
+		return (List<Project>) projectRepository.findAllById(ids);
 	}
 
 }

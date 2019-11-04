@@ -30,7 +30,7 @@ public class RequisitionItemService {
 		return (List<RequisitionItem>) requisitionItemRepository.findAll();
 	}
 
-	public List<RequisitionItem> findAll(final List<Long> ids) {
+	public List<RequisitionItem> findAllById(final List<Long> ids) {
 		return (List<RequisitionItem>) requisitionItemRepository.findAllById(ids);
 	}
 

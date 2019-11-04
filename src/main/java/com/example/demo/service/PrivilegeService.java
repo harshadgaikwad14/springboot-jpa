@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,24 @@ public class PrivilegeService {
 	}
 
 	public List<Privilege> findAll() {
-		List<Privilege> privileges = new ArrayList<>();
-		final Iterable<Privilege> iterator = privilegeRepository.findAll();
-		for (Privilege privilege : iterator) {
-			privileges.add(privilege);
-		}
-		
-		return privileges;
+		return (List<Privilege>) privilegeRepository.findAll();
 	}
+
+	public void delete(final Privilege privilege) {
+		privilegeRepository.delete(privilege);
+	}
+
+	public Privilege findById(final Long id) {
+		return privilegeRepository.findById(id).get();
+	}
+
+	public List<Privilege> findAll(final Long id) {
+		return (List<Privilege>) privilegeRepository.findAll();
+	}
+
+	public List<Privilege> findAllById(final List<Long> ids) {
+		return (List<Privilege>) privilegeRepository.findAllById(ids);
+	}
+
 
 }

@@ -27,4 +27,20 @@ public class GradeService {
 		return (List<Grade>) gradeRepository.findAll();
 	}
 
+	public void delete(final Grade grade) {
+		gradeRepository.delete(grade);
+	}
+
+	public Grade findById(final Long id) {
+		return gradeRepository.findById(id).get();
+	}
+
+	public List<Grade> findAll(final Long id) {
+		return (List<Grade>) gradeRepository.findAll();
+	}
+
+	public List<Grade> findAllById(final List<Long> ids) {
+		return (List<Grade>) gradeRepository.findAllById(ids);
+	}
+
 }
