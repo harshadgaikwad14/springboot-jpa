@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -16,11 +17,13 @@ import com.example.demo.entity.Approver;
 import com.example.demo.entity.Architect;
 import com.example.demo.entity.Bank;
 import com.example.demo.entity.Client;
+import com.example.demo.entity.CommonAudit;
 import com.example.demo.entity.ContactPerson;
 import com.example.demo.entity.Grade;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.Requisition;
 import com.example.demo.entity.RequisitionItem;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Structural;
@@ -30,13 +33,13 @@ import com.example.demo.entity.Unit;
 import com.example.demo.entity.User;
 import com.example.demo.entity.Vendor;
 import com.example.demo.entity.VendorType;
-import com.example.demo.repository.CommonAudit;
 import com.example.demo.service.ApproverService;
 import com.example.demo.service.GradeService;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
 import com.example.demo.service.ProjectService;
 import com.example.demo.service.RequisitionItemService;
+import com.example.demo.service.RequisitionService;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.StudentM2MService;
 import com.example.demo.service.SubjectM2MService;
@@ -83,7 +86,10 @@ public class DataScript {
 
 	@Autowired
 	private UnitService unitService;
-	
+
+	@Autowired
+	private RequisitionService requisitionService;
+
 	@Autowired
 	private RequisitionItemService requisitionItemService;
 
@@ -113,10 +119,15 @@ public class DataScript {
 	public void unit() {
 		createUnit();
 	}
-	
-	public void requisitionItem()
-	{
+
+	public void requisitionItem() {
 		createRequisitionItem();
+	}
+
+	public void requisition() {
+		createRequisition_RequisitionItems();
+		getRequisition();
+		
 	}
 
 	private CommonAudit getCreateCommonAudit() {
@@ -127,14 +138,115 @@ public class DataScript {
 	}
 
 	@Transactional
-	private void createRequisitionItem()
-	{
-		final Item item =itemService.findByName("Item1");
-		System.out.println("******** createRequisitionItem : Item >  "+item);
-		final Grade grade =gradeService.findByName("Grade1");
-		System.out.println("******** createRequisitionItem : grade >  "+grade);
-		final Unit unit =unitService.findByName("Unit1");
-		System.out.println("******** createRequisitionItem : unit >  "+unit);
+	private void getRequisition() {
+		Requisition requisition = requisitionService.findByName("Requisition1");
+		System.out.println("****** BEFORE getRequisition >>> " + requisition);
+		List<RequisitionItem> requisitionItems = (List<RequisitionItem>) requisition.getRequisitionItems();
+		for (RequisitionItem requisitionItem : requisitionItems) {
+			System.out.println("****** BEFORE requisitionItem >>> " + requisitionItem);
+			long id = requisitionItem.getId();
+			if (id % 2 == 1) {
+				deleteRequisitionItem(requisitionItem);
+			}
+
+		}
+		
+		Requisition requisition2 = requisitionService.findByName("Requisition1");
+		System.out.println("****** After getRequisition >>> " + requisition2);
+		List<RequisitionItem> requisitionItems2 = (List<RequisitionItem>) requisition2.getRequisitionItems();
+		for (RequisitionItem requisitionItem2 : requisitionItems2) {
+			System.out.println("****** After requisitionItem >>> " + requisitionItem2);
+		}
+		
+		
+		final List<RequisitionItem> requisitionItems3 = new ArrayList<>();
+		for (int i = 10; i <= 15; i++) {
+
+			final Item item = itemService.findByName("Item" + i);
+			System.out.println("******** createRequisitionItem : Item >  " + item);
+			final Grade grade = gradeService.findByName("Grade" + i);
+			System.out.println("******** createRequisitionItem : grade >  " + grade);
+			final Unit unit = unitService.findByName("Unit" + 1);
+			System.out.println("******** createRequisitionItem : unit >  " + unit);
+			RequisitionItem requisitionItem = new RequisitionItem();
+			requisitionItem.setItem(item);
+			requisitionItem.setGrade(grade);
+			requisitionItem.setUnit(unit);
+			requisitionItem.setQuantity(100l);
+			requisitionItem.setUsedFor("Testing" + i);
+			requisitionItem.setCommonAudit(getCreateCommonAudit());
+			requisitionItem.setRequisition(requisition2);
+			requisitionItems3.add(requisitionItem);
+		}
+
+		
+		
+		requisition2.setRequisitionItems(requisitionItems3);
+
+		requisitionService.save(requisition2);
+
+		
+		
+	}
+
+	@Transactional
+	private void deleteRequisitionItem(RequisitionItem requisitionItem) {
+		requisitionItemService.deleteRequisitionItem(requisitionItem);
+	}
+
+	@Transactional
+	private void createRequisition_RequisitionItems() {
+		
+
+		final Requisition requisition = new Requisition();
+		requisition.setName("Requisition1");
+		requisition.setDescription("Requisition1");
+		requisition.setRemark("Test");
+		try {
+
+			String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+			requisition.setExpectedDeliveryAt(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		final List<RequisitionItem> requisitionItems = new ArrayList<>();
+		for (int i = 1; i <= 5; i++) {
+
+			final Item item = itemService.findByName("Item" + i);
+			System.out.println("******** createRequisitionItem : Item >  " + item);
+			final Grade grade = gradeService.findByName("Grade" + i);
+			System.out.println("******** createRequisitionItem : grade >  " + grade);
+			final Unit unit = unitService.findByName("Unit" + 1);
+			System.out.println("******** createRequisitionItem : unit >  " + unit);
+			RequisitionItem requisitionItem = new RequisitionItem();
+			requisitionItem.setItem(item);
+			requisitionItem.setGrade(grade);
+			requisitionItem.setUnit(unit);
+			requisitionItem.setQuantity(100l);
+			requisitionItem.setUsedFor("Testing" + i);
+			requisitionItem.setCommonAudit(getCreateCommonAudit());
+			requisitionItem.setRequisition(requisition);
+			requisitionItems.add(requisitionItem);
+		}
+
+		
+		
+		requisition.setRequisitionItems(requisitionItems);
+
+		requisitionService.save(requisition);
+	}
+
+	@Transactional
+	private void createRequisitionItem() {
+		final Item item = itemService.findByName("Item1");
+		System.out.println("******** createRequisitionItem : Item >  " + item);
+		final Grade grade = gradeService.findByName("Grade1");
+		System.out.println("******** createRequisitionItem : grade >  " + grade);
+		final Unit unit = unitService.findByName("Unit1");
+		System.out.println("******** createRequisitionItem : unit >  " + unit);
 		RequisitionItem requisitionItem = new RequisitionItem();
 		requisitionItem.setItem(item);
 		requisitionItem.setGrade(grade);
@@ -142,18 +254,23 @@ public class DataScript {
 		requisitionItem.setQuantity(10l);
 		requisitionItem.setUsedFor("Testing 1");
 		requisitionItem.setCommonAudit(getCreateCommonAudit());
-		RequisitionItem r = requisitionItemService.save(requisitionItem );
-		System.out.println("******** createRequisitionItem : RequisitionItem >  "+r);
-		
+		RequisitionItem r = requisitionItemService.save(requisitionItem);
+		System.out.println("******** createRequisitionItem : RequisitionItem >  " + r);
+
 	}
-	
+
 	@Transactional
 	private void getAllItem() {
 		final List<Item> items = itemService.findAll();
 		for (Item item : items) {
 
-			
-			System.out.println("***** Item : "+item);
+			System.out.println("***** Item : " + item);
+			List<Grade> grades = (List<Grade>) item.getGrades();
+			for (Grade grade : grades) {
+
+				System.out.println("***** Gade : " + grade);
+			}
+
 		}
 
 	}

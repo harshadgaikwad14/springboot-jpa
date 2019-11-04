@@ -17,8 +17,6 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.envers.Audited;
 
-import com.example.demo.repository.CommonAudit;
-
 @Entity
 @Audited
 public class Vendor {

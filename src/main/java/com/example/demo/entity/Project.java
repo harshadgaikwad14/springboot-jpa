@@ -19,8 +19,6 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.envers.Audited;
 
-import com.example.demo.repository.CommonAudit;
-
 @Entity
 @Audited
 public class Project {

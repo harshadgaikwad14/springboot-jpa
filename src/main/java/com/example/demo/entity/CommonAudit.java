@@ -1,4 +1,4 @@
-package com.example.demo.repository;
+package com.example.demo.entity;
 
 import java.util.Date;
 
@@ -53,4 +53,11 @@ public class CommonAudit {
 		this.updatedAt = updatedAt;
 	}
 
+	@Override
+	public String toString() {
+		return "CommonAudit [createdBy=" + createdBy + ", createdAt=" + createdAt + ", updatedBy=" + updatedBy
+				+ ", updatedAt=" + updatedAt + "]";
+	}
+
+	
 }

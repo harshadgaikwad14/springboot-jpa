@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,8 +16,6 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
-
-import com.example.demo.repository.CommonAudit;
 
 @Entity
 @Audited
@@ -29,8 +28,8 @@ public class Unit {
 	private String name;
 	private String description;
 
-	@ManyToMany(mappedBy = "units")
-	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToMany(mappedBy = "units",fetch = FetchType.LAZY)
+	//@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Grade> grades;
 
 	@OneToOne
@@ -93,7 +92,7 @@ public class Unit {
 				+ "]";
 	}
 
-
+	
 	
 	
 

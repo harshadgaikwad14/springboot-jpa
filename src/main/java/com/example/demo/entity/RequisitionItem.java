@@ -1,17 +1,19 @@
 package com.example.demo.entity;
 
+import java.util.Collection;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
-
-import com.example.demo.repository.CommonAudit;
 
 @Entity
 @Audited
@@ -31,6 +33,11 @@ public class RequisitionItem {
 	private Unit unit;
 	private Long quantity;
 	private String usedFor;
+
+	@ManyToOne
+	@JoinColumn(name = "requisition_id" ,referencedColumnName = "id")
+	private Requisition requisition;
+
 	@Embedded
 	private CommonAudit commonAudit;
 
@@ -90,12 +97,21 @@ public class RequisitionItem {
 		this.commonAudit = commonAudit;
 	}
 
+	public Requisition getRequisition() {
+		return requisition;
+	}
+
+	public void setRequisition(Requisition requisition) {
+		this.requisition = requisition;
+	}
+
 	@Override
 	public String toString() {
 		return "RequisitionItem [id=" + id + ", item=" + item + ", grade=" + grade + ", unit=" + unit + ", quantity="
 				+ quantity + ", usedFor=" + usedFor + ", commonAudit=" + commonAudit + "]";
 	}
-	
+
 	
 
+	
 }
