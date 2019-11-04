@@ -2,15 +2,18 @@ package com.example.demo.entity;
 
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
 import com.example.demo.repository.CommonAudit;
@@ -25,9 +28,13 @@ public class Unit {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
-	
+
 	@ManyToMany(mappedBy = "units")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	private Collection<Grade> grades;
+
+	@OneToOne
+	private RequisitionItem requisitionItem;
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -72,18 +79,21 @@ public class Unit {
 		this.grades = grades;
 	}
 
+	public RequisitionItem getRequisitionItem() {
+		return requisitionItem;
+	}
+
+	public void setRequisitionItem(RequisitionItem requisitionItem) {
+		this.requisitionItem = requisitionItem;
+	}
+
 	@Override
 	public String toString() {
 		return "Unit [id=" + id + ", name=" + name + ", description=" + description + ", commonAudit=" + commonAudit
 				+ "]";
 	}
 
-	/*
-	 * @Override public String toString() { return "Unit [id=" + id + ", name=" +
-	 * name + ", description=" + description + ", commonAudit=" + commonAudit + "]";
-	 * }
-	 */
-	
+
 	
 	
 

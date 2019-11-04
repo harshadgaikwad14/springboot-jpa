@@ -21,6 +21,7 @@ import com.example.demo.entity.Grade;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.RequisitionItem;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.Structural;
 import com.example.demo.entity.StudentM2M;
@@ -35,6 +36,7 @@ import com.example.demo.service.GradeService;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
 import com.example.demo.service.ProjectService;
+import com.example.demo.service.RequisitionItemService;
 import com.example.demo.service.RoleService;
 import com.example.demo.service.StudentM2MService;
 import com.example.demo.service.SubjectM2MService;
@@ -81,6 +83,9 @@ public class DataScript {
 
 	@Autowired
 	private UnitService unitService;
+	
+	@Autowired
+	private RequisitionItemService requisitionItemService;
 
 	public void project() {
 		createProject();
@@ -108,6 +113,11 @@ public class DataScript {
 	public void unit() {
 		createUnit();
 	}
+	
+	public void requisitionItem()
+	{
+		createRequisitionItem();
+	}
 
 	private CommonAudit getCreateCommonAudit() {
 		final CommonAudit commonAudit = new CommonAudit();
@@ -117,13 +127,33 @@ public class DataScript {
 	}
 
 	@Transactional
+	private void createRequisitionItem()
+	{
+		final Item item =itemService.findByName("Item1");
+		System.out.println("******** createRequisitionItem : Item >  "+item);
+		final Grade grade =gradeService.findByName("Grade1");
+		System.out.println("******** createRequisitionItem : grade >  "+grade);
+		final Unit unit =unitService.findByName("Unit1");
+		System.out.println("******** createRequisitionItem : unit >  "+unit);
+		RequisitionItem requisitionItem = new RequisitionItem();
+		requisitionItem.setItem(item);
+		requisitionItem.setGrade(grade);
+		requisitionItem.setUnit(unit);
+		requisitionItem.setQuantity(10l);
+		requisitionItem.setUsedFor("Testing 1");
+		requisitionItem.setCommonAudit(getCreateCommonAudit());
+		RequisitionItem r = requisitionItemService.save(requisitionItem );
+		System.out.println("******** createRequisitionItem : RequisitionItem >  "+r);
+		
+	}
+	
+	@Transactional
 	private void getAllItem() {
 		final List<Item> items = itemService.findAll();
 		for (Item item : items) {
 
 			
-			System.out.println("Item : "+item);
-			System.out.println("Item : "+item.getGrades());
+			System.out.println("***** Item : "+item);
 		}
 
 	}
