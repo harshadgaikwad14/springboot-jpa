@@ -273,6 +273,7 @@ public class DataScript {
 			requisition.setName("Requisition" + i);
 			requisition.setDescription("Requisition" + i);
 			requisition.setRemark("Test" + i);
+			requisition.setRequestedBy("Harshad"+i);
 			try {
 
 				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());

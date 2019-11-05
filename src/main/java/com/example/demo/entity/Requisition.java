@@ -29,6 +29,7 @@ public class Requisition {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
+	private String requestedBy;
 	@Temporal(TemporalType.DATE)
 	private Date expectedDeliveryAt;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "requisition")
@@ -96,11 +97,22 @@ public class Requisition {
 	public void setProject(Project project) {
 		this.project = project;
 	}
+	
+	
 
+	public String getRequestedBy() {
+		return requestedBy;
+	}
+
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
+	}
+
+	
 	@Override
 	public String toString() {
-		return "Requisition [id=" + id + ", name=" + name + ", description=" + description + ", expectedDeliveryAt="
-				+ expectedDeliveryAt + ", remark=" + remark + "]";
+		return "Requisition [id=" + id + ", name=" + name + ", description=" + description + ", requestedBy="
+				+ requestedBy + ", expectedDeliveryAt=" + expectedDeliveryAt + ", remark=" + remark + "]";
 	}
 
 	
