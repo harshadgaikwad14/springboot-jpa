@@ -283,7 +283,7 @@ public class DataScript {
 	}
 
 	private void createItem() {
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 20; i++) {
 
 			Item item = new Item();
 			item.setName("Item" + i);
@@ -322,7 +322,7 @@ public class DataScript {
 	}
 
 	private void createGrade() {
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 20; i++) {
 
 			Grade grade = new Grade();
 			grade.setName("Grade" + i);
@@ -333,7 +333,7 @@ public class DataScript {
 	}
 
 	private void createUnit() {
-		for (int i = 1; i <= 5; i++) {
+		for (int i = 1; i <= 20; i++) {
 
 			Unit unit = new Unit();
 			unit.setName("Unit" + i);

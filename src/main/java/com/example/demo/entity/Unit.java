@@ -1,8 +1,8 @@
 package com.example.demo.entity;
 
 import java.util.Collection;
+import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -11,10 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.envers.Audited;
 
 @Entity
@@ -32,8 +30,8 @@ public class Unit {
 	//@LazyCollection(LazyCollectionOption.TRUE)
 	private Collection<Grade> grades;
 
-	@OneToOne
-	private RequisitionItem requisitionItem;
+	@OneToMany(mappedBy = "unit")
+	private List<RequisitionItem> requisitionItems;
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -78,12 +76,14 @@ public class Unit {
 		this.grades = grades;
 	}
 
-	public RequisitionItem getRequisitionItem() {
-		return requisitionItem;
+
+
+	public List<RequisitionItem> getRequisitionItems() {
+		return requisitionItems;
 	}
 
-	public void setRequisitionItem(RequisitionItem requisitionItem) {
-		this.requisitionItem = requisitionItem;
+	public void setRequisitionItems(List<RequisitionItem> requisitionItems) {
+		this.requisitionItems = requisitionItems;
 	}
 
 	@Override
