@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,7 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.envers.Audited;
 
@@ -37,8 +38,9 @@ public class Grade {
 	@JoinTable(name = "grades_units", joinColumns = @JoinColumn(referencedColumnName = "id", name = "grade_id"), inverseJoinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id"))
 	private Collection<Unit> units;
 
-	@OneToOne(mappedBy = "grade")
-	private RequisitionItem requisitionItem;
+	@OneToMany(mappedBy = "grade")
+	private List<RequisitionItem> requisitionItems;
+
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -91,12 +93,15 @@ public class Grade {
 		this.units = units;
 	}
 
-	public RequisitionItem getRequisitionItem() {
-		return requisitionItem;
+	
+	
+
+	public List<RequisitionItem> getRequisitionItems() {
+		return requisitionItems;
 	}
 
-	public void setRequisitionItem(RequisitionItem requisitionItem) {
-		this.requisitionItem = requisitionItem;
+	public void setRequisitionItems(List<RequisitionItem> requisitionItems) {
+		this.requisitionItems = requisitionItems;
 	}
 
 	@Override

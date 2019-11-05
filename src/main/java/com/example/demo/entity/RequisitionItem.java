@@ -18,14 +18,14 @@ public class RequisitionItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne
-	@JoinColumn(name = "item_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name = "item_id", referencedColumnName = "id",nullable=false)
 	private Item item;
-	@OneToOne
-	@JoinColumn(name = "grade_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name = "grade_id", referencedColumnName = "id",nullable=false)
 	private Grade grade;
-	@OneToOne
-	@JoinColumn(name = "unit_id", referencedColumnName = "id")
+	@ManyToOne
+	@JoinColumn(name = "unit_id", referencedColumnName = "id",nullable=false)
 	private Unit unit;
 	private Long quantity;
 	private String usedFor;
