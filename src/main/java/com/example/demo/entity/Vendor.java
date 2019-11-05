@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
@@ -30,11 +31,9 @@ public class Vendor {
 	private String description;
 	private String gstNo;
 	private String address;
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "vendors_types", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "vendor_type_id", referencedColumnName = "id"))
-
-	private List<VendorType> vendorTypes;
-
+	@ManyToOne
+	@JoinColumn(name = "vendor_type_id" ,referencedColumnName = "id",nullable=false)
+	private VendorType vendorType;
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "bank_name")),
 			@AttributeOverride(name = "branchName", column = @Column(name = "bank_branch_name")),
@@ -50,10 +49,7 @@ public class Vendor {
 			@AttributeOverride(name = "emailId", column = @Column(name = "cp_email_id")) })
 	private ContactPerson contactPerson;
 	
-	@OneToOne(mappedBy = "vendor")
-	private VendorRequisition vendorRequisition;
-	@OneToOne(mappedBy = "vendor")
-	private VendorRequisitionItem vendorRequisitionItem;
+	
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -98,13 +94,17 @@ public class Vendor {
 		this.address = address;
 	}
 
-	public List<VendorType> getVendorTypes() {
-		return vendorTypes;
+	
+
+	public VendorType getVendorType() {
+		return vendorType;
 	}
 
-	public void setVendorTypes(List<VendorType> vendorTypes) {
-		this.vendorTypes = vendorTypes;
+	public void setVendorType(VendorType vendorType) {
+		this.vendorType = vendorType;
 	}
+
+	
 
 	public Bank getBank() {
 		return bank;
@@ -130,13 +130,15 @@ public class Vendor {
 		this.commonAudit = commonAudit;
 	}
 
-	public VendorRequisition getVendorRequisition() {
-		return vendorRequisition;
-	}
+	
 
-	public void setVendorRequisition(VendorRequisition vendorRequisition) {
-		this.vendorRequisition = vendorRequisition;
+	@Override
+	public String toString() {
+		return "Vendor [id=" + id + ", name=" + name + ", description=" + description + ", gstNo=" + gstNo
+				+ ", address=" + address + ", vendorType=" + vendorType + ", bank=" + bank + ", contactPerson="
+				+ contactPerson + ", commonAudit=" + commonAudit + "]";
 	}
+	
 	
 
 }

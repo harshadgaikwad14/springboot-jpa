@@ -4,47 +4,45 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
 @Entity
 @Audited
 public class VendorRequisition {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne
-	@JoinColumn(name = "vendor_id", referencedColumnName = "id")
-	private Vendor vendor;
-	@OneToOne
-	@JoinColumn(name = "requisition_id", referencedColumnName = "id")
-	private Requisition requisition;
+
+	private Long vendorId;
+
+	private Long requisitionId;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Vendor getVendor() {
-		return vendor;
+
+	public Long getVendorId() {
+		return vendorId;
 	}
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
+
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
-	public Requisition getRequisition() {
-		return requisition;
+
+	public Long getRequisitionId() {
+		return requisitionId;
 	}
-	public void setRequisition(Requisition requisition) {
-		this.requisition = requisition;
+
+	public void setRequisitionId(Long requisitionId) {
+		this.requisitionId = requisitionId;
 	}
-	@Override
-	public String toString() {
-		return "VendorRequisition [id=" + id + ", vendor=" + vendor + ", requisition=" + requisition + "]";
-	}
-	
+
 	
 
 }

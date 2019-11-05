@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -118,7 +119,7 @@ public class DataScript {
 	public void item() {
 		createItem();
 		updateItem_Grade();
-		getAllItem();
+		// getAllItem();
 	}
 
 	public void grade() {
@@ -131,21 +132,20 @@ public class DataScript {
 	}
 
 	public void requisitionItem() {
-		createRequisitionItem();
+		// createRequisitionItem();
 	}
 
 	public void requisition() {
 		createRequisition_RequisitionItems();
-		getRequisition();
+		// getRequisition();
 
 	}
 
 	public void vendorRequisition() {
 		createVendorRequisition();
 	}
-	
-	public void vendorRequisitionItem()
-	{
+
+	public void vendorRequisitionItem() {
 		createVendorRequisitionItem();
 	}
 
@@ -156,28 +156,48 @@ public class DataScript {
 		return commonAudit;
 	}
 
+	@Transactional
 	private void createVendorRequisitionItem() {
 
-		Requisition requisition = requisitionService.findByName("Requisition1");
-		List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
-		Vendor vendor = vendorService.findByName("Vendor1");
-		for (RequisitionItem requisitionItem : requisitionItems) {
+		for (int i = 1; i <= 4; i++) {
 
-			VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
-			vendorRequisitionItem.setRequisitionItem(requisitionItem);
-			vendorRequisitionItem.setVendor(vendor);
-			vendorRequisitionItemService.save(vendorRequisitionItem);
+			final Requisition requisition = requisitionService.findByName("Requisition" + i);
+			vendorRequisitionService.findAll(id)
+			requisition.get
+			final VendorRequisition vendorRequisition = requisition.get
+			final Vendor vendor = vendorRequisition.getVendor();
+			final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
+			System.out.println(">>>>>>> requisitionItems size :"+requisitionItems.size());
+			for (RequisitionItem requisitionItem : requisitionItems) {
+
+				final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
+				vendorRequisitionItem.setRequisitionItem(requisitionItem);
+				vendorRequisitionItem.setVendor(vendor);
+				// vendorRequisitionItem.setAmount(new BigDecimal("1000"));
+				VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+				System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
+				
+			}
 		}
 	}
 
 	private void createVendorRequisition() {
 
-		Requisition requisition = requisitionService.findByName("Requisition1");
-		Vendor vendor = vendorService.findByName("Vendor1");
-		VendorRequisition vendorRequisition = new VendorRequisition();
-		vendorRequisition.setRequisition(requisition);
-		vendorRequisition.setVendor(vendor);
-		vendorRequisitionService.save(vendorRequisition);
+		final List<Vendor> vendors = vendorService.findAll();
+		final List<Requisition> requisitions = requisitionService.findAll();
+
+		for (Vendor vendor : vendors) {
+
+			for (Requisition requisition : requisitions) {
+
+				VendorRequisition vendorRequisition = new VendorRequisition();
+				vendorRequisition.setRequisition(requisition);
+				vendorRequisition.setVendor(vendor);
+				VendorRequisition vr = vendorRequisitionService.save(vendorRequisition);
+				System.out.println("Vendor Requisition Created Successfully : " + vr.getId());
+			}
+		}
+
 	}
 
 	@Transactional
@@ -243,43 +263,50 @@ public class DataScript {
 	@Transactional
 	private void createRequisition_RequisitionItems() {
 
-		final Requisition requisition = new Requisition();
-		requisition.setName("Requisition1");
-		requisition.setDescription("Requisition1");
-		requisition.setRemark("Test");
-		try {
+		for (int i = 1; i < 5; i++) {
+			final Requisition requisition = new Requisition();
+			requisition.setName("Requisition" + i);
+			requisition.setDescription("Requisition" + i);
+			requisition.setRemark("Test" + i);
+			try {
 
-			String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
-			requisition.setExpectedDeliveryAt(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				requisition.setExpectedDeliveryAt(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			final List<RequisitionItem> requisitionItems = new ArrayList<>();
+			for (int j = 1; j <= 3; j++) {
+
+				final Item item = itemService.findByName("Item" + j);
+
+				final Grade grade = gradeService.findByName("Grade" + j);
+
+				final Unit unit = unitService.findByName("Unit" + j);
+
+				RequisitionItem requisitionItem = new RequisitionItem();
+				requisitionItem.setItem(item);
+				requisitionItem.setGrade(grade);
+				requisitionItem.setUnit(unit);
+				requisitionItem.setQuantity(100l);
+				requisitionItem.setUsedFor("Testing" + j);
+				requisitionItem.setCommonAudit(getCreateCommonAudit());
+				requisitionItem.setRequisition(requisition);
+				requisitionItems.add(requisitionItem);
+			}
+
+			requisition.setRequisitionItems(requisitionItems);
+
+			final Project project = projectService.findByName("Project" + i);
+			requisition.setProject(project);
+			final Requisition r = requisitionService.save(requisition);
+			System.out.println("******** Requisition Created Successfully : " + r.getName());
+
 		}
 
-		final List<RequisitionItem> requisitionItems = new ArrayList<>();
-		for (int i = 1; i <= 5; i++) {
-
-			final Item item = itemService.findByName("Item" + i);
-			System.out.println("******** createRequisitionItem : Item >  " + item);
-			final Grade grade = gradeService.findByName("Grade" + i);
-			System.out.println("******** createRequisitionItem : grade >  " + grade);
-			final Unit unit = unitService.findByName("Unit" + 1);
-			System.out.println("******** createRequisitionItem : unit >  " + unit);
-			RequisitionItem requisitionItem = new RequisitionItem();
-			requisitionItem.setItem(item);
-			requisitionItem.setGrade(grade);
-			requisitionItem.setUnit(unit);
-			requisitionItem.setQuantity(100l);
-			requisitionItem.setUsedFor("Testing" + i);
-			requisitionItem.setCommonAudit(getCreateCommonAudit());
-			requisitionItem.setRequisition(requisition);
-			requisitionItems.add(requisitionItem);
-		}
-
-		requisition.setRequisitionItems(requisitionItems);
-
-		requisitionService.save(requisition);
 	}
 
 	@Transactional
@@ -319,7 +346,7 @@ public class DataScript {
 	}
 
 	private void createItem() {
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 10; i++) {
 
 			Item item = new Item();
 			item.setName("Item" + i);
@@ -358,7 +385,7 @@ public class DataScript {
 	}
 
 	private void createGrade() {
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 10; i++) {
 
 			Grade grade = new Grade();
 			grade.setName("Grade" + i);
@@ -369,7 +396,7 @@ public class DataScript {
 	}
 
 	private void createUnit() {
-		for (int i = 1; i <= 20; i++) {
+		for (int i = 1; i <= 10; i++) {
 
 			Unit unit = new Unit();
 			unit.setName("Unit" + i);
@@ -380,35 +407,40 @@ public class DataScript {
 	}
 
 	private void createVendor() {
-		List<VendorType> vendorTypes = vendorTypeService.findAll();
 
-		Bank bank1 = new Bank();
-		bank1.setName("HDFC");
-		bank1.setBranchName("Goregaaon");
-		bank1.setAccountNo("1534879");
-		bank1.setIfscCode("HDFC40001");
-		bank1.setMicrCode("25448");
+		VendorType vendorType = vendorTypeService.findByName("Goods");
+		for (int i = 1; i <= 5; i++) {
 
-		ContactPerson contactPerson1 = new ContactPerson();
-		contactPerson1.setName("Harshad");
-		contactPerson1.setContactNo("681012131");
-		contactPerson1.setEmailId("harshad.gaikwad@gmail.com");
+			Bank bank = new Bank();
+			bank.setName("HDFC" + i);
+			bank.setBranchName("Goregaaon" + i);
+			bank.setAccountNo("1534879");
+			bank.setIfscCode("HDFC40001" + i);
+			bank.setMicrCode("25448");
 
-		Vendor vendor1 = new Vendor();
-		vendor1.setName("Vendor1");
-		vendor1.setDescription("vendor1");
-		vendor1.setGstNo("gst12345");
-		vendor1.setAddress("Mumbai");
+			ContactPerson contactPerson = new ContactPerson();
+			contactPerson.setName("Harshad" + i);
+			contactPerson.setContactNo("681012131");
+			contactPerson.setEmailId("harshad.gaikwad@gmail.com");
 
-		vendor1.setBank(bank1);
+			Vendor vendor = new Vendor();
+			vendor.setName("Vendor" + i);
+			vendor.setDescription("vendor" + i);
+			vendor.setGstNo("gst12345");
+			vendor.setAddress("Mumbai" + i);
 
-		vendor1.setContactPerson(contactPerson1);
-		vendor1.setVendorTypes(vendorTypes);
-		final CommonAudit commonAudit = new CommonAudit();
-		commonAudit.setCreatedBy("System");
-		commonAudit.setCreatedAt(new Date());
-		vendor1.setCommonAudit(commonAudit);
-		vendorService.save(vendor1);
+			vendor.setBank(bank);
+
+			vendor.setContactPerson(contactPerson);
+			vendor.setVendorType(vendorType);
+			final CommonAudit commonAudit = new CommonAudit();
+			commonAudit.setCreatedBy("System");
+			commonAudit.setCreatedAt(new Date());
+			vendor.setCommonAudit(commonAudit);
+			Vendor v = vendorService.save(vendor);
+			System.out.println("***** Vendor Created Successfully : " + v.getName());
+
+		}
 	}
 
 	private void createVendorType() {
@@ -433,52 +465,56 @@ public class DataScript {
 
 	public void createProject() {
 
-		final Project project = new Project();
-		project.setName("Project1");
-		project.setDescription("Project1 Desc");
-		try {
+		for (int i = 1; i <= 10; i++) {
 
-			String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			final Project project = new Project();
+			project.setName("Project" + i);
+			project.setDescription("Project" + i + " Desc");
+			try {
 
-			project.setStartDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
-			project.setEndDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+				project.setStartDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+				project.setEndDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			project.setAddress("Mumbai" + i);
+			project.setRemark("Test" + i);
+			project.setSubDivisionName("Goregaon" + i);
+
+			final ContactPerson contactPerson = new ContactPerson();
+			contactPerson.setName("Harshad" + i);
+			contactPerson.setEmailId("harshad.gaikwad@gmail.com");
+			contactPerson.setContactNo("9999999");
+			project.setContactPerson(contactPerson);
+
+			final Client client = new Client();
+			client.setName("client_Harshad" + i);
+			client.setEmailId("charshad.gaikwad@gmail.com");
+			client.setContactNo("9999999");
+			project.setClient(client);
+
+			final Architect architect = new Architect();
+			architect.setName("architect_Harshad" + i);
+			architect.setEmailId("aharshad.gaikwad@gmail.com");
+			architect.setContactNo("9999999");
+			project.setArchitect(architect);
+
+			final Structural structural = new Structural();
+			structural.setName("structural_Harshad" + i);
+			structural.setEmailId("sharshad.gaikwad@gmail.com");
+			structural.setContactNo("9999999");
+			project.setStructural(structural);
+
+			final CommonAudit commonAudit = new CommonAudit();
+			commonAudit.setCreatedBy("System");
+			commonAudit.setCreatedAt(new Date());
+			project.setCommonAudit(commonAudit);
+			projectService.save(project);
+
 		}
-		project.setAddress("Mumbai");
-		project.setRemark("Test");
-		project.setSubDivisionName("Goregaon");
-
-		final ContactPerson contactPerson = new ContactPerson();
-		contactPerson.setName("Harshad");
-		contactPerson.setEmailId("harshad.gaikwad@gmail.com");
-		contactPerson.setContactNo("9999999");
-		project.setContactPerson(contactPerson);
-
-		final Client client = new Client();
-		client.setName("client_Harshad");
-		client.setEmailId("charshad.gaikwad@gmail.com");
-		client.setContactNo("9999999");
-		project.setClient(client);
-
-		final Architect architect = new Architect();
-		architect.setName("architect_Harshad");
-		architect.setEmailId("aharshad.gaikwad@gmail.com");
-		architect.setContactNo("9999999");
-		project.setArchitect(architect);
-
-		final Structural structural = new Structural();
-		structural.setName("structural_Harshad");
-		structural.setEmailId("sharshad.gaikwad@gmail.com");
-		structural.setContactNo("9999999");
-		project.setStructural(structural);
-
-		final CommonAudit commonAudit = new CommonAudit();
-		commonAudit.setCreatedBy("System");
-		commonAudit.setCreatedAt(new Date());
-		project.setCommonAudit(commonAudit);
-		projectService.save(project);
 	}
 
 	public void createStudent() {
@@ -594,16 +630,6 @@ public class DataScript {
 		user1.setProjects(projects);
 		final User u1 = userService.save(user1);
 		System.out.println("User Created " + u1);
-
-		/*
-		 * final Role role2 = roleService.findByName("ROLE_USER"); final User user2 =
-		 * new User(); user2.setUserName("pranshu.srivastav");
-		 * user2.setFirstName("Pranshu"); user2.setLastName("Shrivastav");
-		 * user2.setEmail("pranshu.shrivastav@gmail.com"); user2.setEnabled(true);
-		 * user2.setPassword("password"); user2.setTokenExpired(false);
-		 * user2.setRoles(Arrays.asList(role2)); final User u2 =
-		 * userService.save(user2); System.out.println("User Created " + u2);
-		 */
 
 	}
 

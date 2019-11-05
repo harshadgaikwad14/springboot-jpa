@@ -34,8 +34,6 @@ public class RequisitionItem {
 	@JoinColumn(name = "requisition_id" ,referencedColumnName = "id")
 	private Requisition requisition;
 	
-	@OneToOne(mappedBy = "requisitionItem")
-	private VendorRequisitionItem vendorRequisitionItem;
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -105,19 +103,15 @@ public class RequisitionItem {
 	}
 	
 
-	public VendorRequisitionItem getVendorRequisitionItem() {
-		return vendorRequisitionItem;
-	}
-
-	public void setVendorRequisitionItem(VendorRequisitionItem vendorRequisitionItem) {
-		this.vendorRequisitionItem = vendorRequisitionItem;
-	}
+	
 
 	@Override
 	public String toString() {
 		return "RequisitionItem [id=" + id + ", item=" + item + ", grade=" + grade + ", unit=" + unit + ", quantity="
 				+ quantity + ", usedFor=" + usedFor + ", commonAudit=" + commonAudit + "]";
 	}
+
+	
 
 	
 

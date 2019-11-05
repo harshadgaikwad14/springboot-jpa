@@ -31,7 +31,7 @@ public class Requisition {
 	private String description;
 	@Temporal(TemporalType.DATE)
 	private Date expectedDeliveryAt;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "requisition")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "requisition")
 	private List<RequisitionItem> requisitionItems;
 
 	@ManyToOne
@@ -40,8 +40,6 @@ public class Requisition {
 
 	private String remark;
 
-	@OneToOne(mappedBy = "requisition")
-	private VendorRequisition vendorRequisition;
 
 	public Long getId() {
 		return id;
@@ -105,14 +103,6 @@ public class Requisition {
 				+ expectedDeliveryAt + ", remark=" + remark + "]";
 	}
 
-	public VendorRequisition getVendorRequisition() {
-		return vendorRequisition;
-	}
-
-	public void setVendorRequisition(VendorRequisition vendorRequisition) {
-		this.vendorRequisition = vendorRequisition;
-	}
-	
 	
 
 }

@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,40 +14,47 @@ import org.hibernate.envers.Audited;
 @Entity
 @Audited
 public class VendorRequisitionItem {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToOne
-	@JoinColumn(name = "vendor_id", referencedColumnName = "id")
-	private Vendor vendor;
-	@OneToOne
-	@JoinColumn(name = "requisition_item_id", referencedColumnName = "id")
-	private RequisitionItem requisitionItem;
+
+	private Long vendorId;
+
+	private RequisitionItem requisitionItemId;
+
+	private BigDecimal amount;
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Vendor getVendor() {
-		return vendor;
+
+	public BigDecimal getAmount() {
+		return amount;
 	}
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
 	}
-	public RequisitionItem getRequisitionItem() {
-		return requisitionItem;
+
+	public Long getVendorId() {
+		return vendorId;
 	}
-	public void setRequisitionItem(RequisitionItem requisitionItem) {
-		this.requisitionItem = requisitionItem;
+
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
 	}
-	@Override
-	public String toString() {
-		return "VendorRequisitionItem [id=" + id + ", vendor=" + vendor + ", requisitionItem=" + requisitionItem + "]";
+
+	public RequisitionItem getRequisitionItemId() {
+		return requisitionItemId;
 	}
-	
-	
-	
+
+	public void setRequisitionItemId(RequisitionItem requisitionItemId) {
+		this.requisitionItemId = requisitionItemId;
+	}
 
 }
