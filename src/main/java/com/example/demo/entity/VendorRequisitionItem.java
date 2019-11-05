@@ -21,7 +21,7 @@ public class VendorRequisitionItem {
 
 	private Long vendorId;
 
-	private RequisitionItem requisitionItemId;
+	private Long requisitionItemId;
 
 	private BigDecimal amount;
 
@@ -49,11 +49,11 @@ public class VendorRequisitionItem {
 		this.vendorId = vendorId;
 	}
 
-	public RequisitionItem getRequisitionItemId() {
+	public Long getRequisitionItemId() {
 		return requisitionItemId;
 	}
 
-	public void setRequisitionItemId(RequisitionItem requisitionItemId) {
+	public void setRequisitionItemId(Long requisitionItemId) {
 		this.requisitionItemId = requisitionItemId;
 	}
 

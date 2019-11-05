@@ -162,23 +162,28 @@ public class DataScript {
 		for (int i = 1; i <= 4; i++) {
 
 			final Requisition requisition = requisitionService.findByName("Requisition" + i);
-			vendorRequisitionService.findAll(id)
-			requisition.get
-			final VendorRequisition vendorRequisition = requisition.get
-			final Vendor vendor = vendorRequisition.getVendor();
-			final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
-			System.out.println(">>>>>>> requisitionItems size :"+requisitionItems.size());
-			for (RequisitionItem requisitionItem : requisitionItems) {
+			if (requisition != null) {
 
-				final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
-				vendorRequisitionItem.setRequisitionItem(requisitionItem);
-				vendorRequisitionItem.setVendor(vendor);
-				// vendorRequisitionItem.setAmount(new BigDecimal("1000"));
-				VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
-				System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
-				
+				final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
+				List<VendorRequisition> VendorRequisitions = vendorRequisitionService
+						.findByRequisitionId(requisition.getId());
+				for (VendorRequisition vendorRequisition : VendorRequisitions) {
+
+					for (RequisitionItem requisitionItem : requisitionItems) {
+
+						final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
+						vendorRequisitionItem.setRequisitionItemId(requisitionItem.getId());
+						vendorRequisitionItem.setVendorId(vendorRequisition.getVendorId());
+						vendorRequisitionItem.setAmount(new BigDecimal("1000"));
+						VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+						System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
+					}
+
+				}
 			}
+
 		}
+
 	}
 
 	private void createVendorRequisition() {
@@ -191,8 +196,8 @@ public class DataScript {
 			for (Requisition requisition : requisitions) {
 
 				VendorRequisition vendorRequisition = new VendorRequisition();
-				vendorRequisition.setRequisition(requisition);
-				vendorRequisition.setVendor(vendor);
+				vendorRequisition.setRequisitionId(requisition.getId());
+				vendorRequisition.setVendorId(vendor.getId());
 				VendorRequisition vr = vendorRequisitionService.save(vendorRequisition);
 				System.out.println("Vendor Requisition Created Successfully : " + vr.getId());
 			}
