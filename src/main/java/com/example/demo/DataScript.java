@@ -498,6 +498,7 @@ public class DataScript {
 			final Project project = new Project();
 			project.setName("Project" + i);
 			project.setDescription("Project" + i + " Desc");
+			project.setActive(true);
 			try {
 
 				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());

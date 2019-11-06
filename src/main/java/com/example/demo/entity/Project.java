@@ -38,7 +38,7 @@ public class Project {
 	private String subDivisionName;
 	private String remark;
 	private String address;
-
+	private boolean active;
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "name", column = @Column(name = "cp_name")),
 			@AttributeOverride(name = "contactNo", column = @Column(name = "cp_contact_no")),
@@ -193,13 +193,16 @@ public class Project {
 		this.requisitions = requisitions;
 	}
 
-	@Override
-	public String toString() {
-		return "Project [id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", subDivisionName=" + subDivisionName + ", remark=" + remark + ", address="
-				+ address + ", contactPerson=" + contactPerson + ", client=" + client + ", architect=" + architect
-				+ ", structural=" + structural + ", commonAudit=" + commonAudit + "]";
+	public boolean isActive() {
+		return active;
 	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	
+
+	
 	
 
 	
