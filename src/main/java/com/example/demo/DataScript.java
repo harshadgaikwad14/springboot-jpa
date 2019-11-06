@@ -24,6 +24,7 @@ import com.example.demo.entity.Grade;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.Quotation;
 import com.example.demo.entity.Requisition;
 import com.example.demo.entity.RequisitionItem;
 import com.example.demo.entity.Role;
@@ -41,6 +42,7 @@ import com.example.demo.service.GradeService;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
 import com.example.demo.service.ProjectService;
+import com.example.demo.service.QuotationService;
 import com.example.demo.service.RequisitionItemService;
 import com.example.demo.service.RequisitionService;
 import com.example.demo.service.RoleService;
@@ -103,6 +105,9 @@ public class DataScript {
 
 	@Autowired
 	private VendorRequisitionItemService vendorRequisitionItemService;
+
+	@Autowired
+	private QuotationService quotationService;
 
 	public void project() {
 		createProject();
@@ -192,15 +197,32 @@ public class DataScript {
 		final List<Requisition> requisitions = requisitionService.findAll();
 
 		for (Vendor vendor : vendors) {
+			List<VendorRequisition> vendorRequisitions = new ArrayList<>();
+			final Quotation quotation = new Quotation();
+			quotation.setCommonAudit(getCreateCommonAudit());
+			quotation.setNotifyToVendor(true);
+			quotation.setReplyFromVendor(false);
+
+			try {
+
+				final String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
+				quotation.setLastDateOfSubmission(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			for (Requisition requisition : requisitions) {
 
 				VendorRequisition vendorRequisition = new VendorRequisition();
 				vendorRequisition.setRequisitionId(requisition.getId());
 				vendorRequisition.setVendorId(vendor.getId());
-				VendorRequisition vr = vendorRequisitionService.save(vendorRequisition);
-				System.out.println("Vendor Requisition Created Successfully : " + vr.getId());
+				vendorRequisition.setQuotation(quotation);
+				vendorRequisitions.add(vendorRequisition);
 			}
+			quotation.setVendorRequisitions(vendorRequisitions);
+			quotationService.save(quotation);
 		}
 
 	}
@@ -273,7 +295,7 @@ public class DataScript {
 			requisition.setName("Requisition" + i);
 			requisition.setDescription("Requisition" + i);
 			requisition.setRemark("Test" + i);
-			requisition.setRequestedBy("Harshad"+i);
+			requisition.setRequestedBy("Harshad" + i);
 			try {
 
 				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
