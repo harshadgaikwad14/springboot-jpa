@@ -105,12 +105,7 @@ public class RequisitionItem {
 
 	
 
-	@Override
-	public String toString() {
-		return "RequisitionItem [id=" + id + ", item=" + item + ", grade=" + grade + ", unit=" + unit + ", quantity="
-				+ quantity + ", usedFor=" + usedFor + ", commonAudit=" + commonAudit + "]";
-	}
-
+	
 	
 
 	

@@ -1,16 +1,14 @@
 package com.example.demo.entity;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -23,15 +21,20 @@ public class Quotation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "quotation")
-	private List<VendorRequisition> vendorRequisitions;
-
-	private boolean notifyToVendor;
-	private boolean replyFromVendor;
+	
 	private boolean active;
 
 	@Temporal(TemporalType.DATE)
+	private Date deliveryDate;
+	
+	@Temporal(TemporalType.DATE)
 	private Date lastDateOfSubmission;
+	
+	private String remark;
+	
+	@OneToOne
+	@JoinColumn(name = "requisition_id")
+	private Requisition requisition; 
 
 	@Embedded
 	private CommonAudit commonAudit;
@@ -44,22 +47,7 @@ public class Quotation {
 		this.id = id;
 	}
 
-	public boolean isNotifyToVendor() {
-		return notifyToVendor;
-	}
-
-	public void setNotifyToVendor(boolean notifyToVendor) {
-		this.notifyToVendor = notifyToVendor;
-	}
-
-	public boolean isReplyFromVendor() {
-		return replyFromVendor;
-	}
-
-	public void setReplyFromVendor(boolean replyFromVendor) {
-		this.replyFromVendor = replyFromVendor;
-	}
-
+	
 	public boolean isActive() {
 		return active;
 	}
@@ -76,13 +64,7 @@ public class Quotation {
 		this.commonAudit = commonAudit;
 	}
 
-	public List<VendorRequisition> getVendorRequisitions() {
-		return vendorRequisitions;
-	}
-
-	public void setVendorRequisitions(List<VendorRequisition> vendorRequisitions) {
-		this.vendorRequisitions = vendorRequisitions;
-	}
+	
 
 	public Date getLastDateOfSubmission() {
 		return lastDateOfSubmission;
@@ -91,5 +73,31 @@ public class Quotation {
 	public void setLastDateOfSubmission(Date lastDateOfSubmission) {
 		this.lastDateOfSubmission = lastDateOfSubmission;
 	}
+
+	public Date getDeliveryDate() {
+		return deliveryDate;
+	}
+
+	public void setDeliveryDate(Date deliveryDate) {
+		this.deliveryDate = deliveryDate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public Requisition getRequisition() {
+		return requisition;
+	}
+
+	public void setRequisition(Requisition requisition) {
+		this.requisition = requisition;
+	}
+	
+	
 
 }

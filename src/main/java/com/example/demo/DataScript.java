@@ -151,7 +151,11 @@ public class DataScript {
 	}
 
 	public void vendorRequisitionItem() {
-		createVendorRequisitionItem();
+		// createVendorRequisitionItem();
+	}
+
+	public void quotation() {
+		createQuotation();
 	}
 
 	private CommonAudit getCreateCommonAudit() {
@@ -161,68 +165,74 @@ public class DataScript {
 		return commonAudit;
 	}
 
-	@Transactional
-	private void createVendorRequisitionItem() {
+	private void createQuotation() {
 
-		for (int i = 1; i <= 4; i++) {
+		final Requisition requisition = requisitionService.findByName("Requisition1");
 
-			final Requisition requisition = requisitionService.findByName("Requisition" + i);
-			if (requisition != null) {
+		Quotation quotation = new Quotation();
+		quotation.setActive(true);
+		quotation.setCommonAudit(getCreateCommonAudit());
+		quotation.setRemark("Test");
+		quotation.setRequisition(requisition);
+		try {
 
-				final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
-				List<VendorRequisition> VendorRequisitions = vendorRequisitionService
-						.findByRequisitionId(requisition.getId());
-				for (VendorRequisition vendorRequisition : VendorRequisitions) {
-
-					for (RequisitionItem requisitionItem : requisitionItems) {
-
-						final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
-						vendorRequisitionItem.setRequisitionItemId(requisitionItem.getId());
-						vendorRequisitionItem.setVendorId(vendorRequisition.getVendorId());
-						vendorRequisitionItem.setAmount(new BigDecimal("1000"));
-						VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
-						System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
-					}
-
-				}
-			}
-
+			final String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+			quotation.setDeliveryDate(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+			quotation.setLastDateOfSubmission(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
+		Quotation q = quotationService.save(quotation);
+		System.out.println("Quotation Created Successfully : " + q.getId());
+
 	}
+
+//	@Transactional
+//	private void createVendorRequisitionItem() {
+//
+//		for (int i = 1; i <= 4; i++) {
+//
+//			final Requisition requisition = requisitionService.findByName("Requisition" + i);
+//			if (requisition != null) {
+//
+//				final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
+//				List<VendorRequisition> VendorRequisitions = vendorRequisitionService
+//						.findByRequisitionId(requisition.getId());
+//				for (VendorRequisition vendorRequisition : VendorRequisitions) {
+//
+//					for (RequisitionItem requisitionItem : requisitionItems) {
+//
+//						final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
+//						vendorRequisitionItem.setRequisitionItemId(requisitionItem.getId());
+//						vendorRequisitionItem.setVendorId(vendorRequisition.getVendorId());
+//						vendorRequisitionItem.setAmount(new BigDecimal("1000"));
+//						VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+//						System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
+//					}
+//
+//				}
+//			}
+//
+//		}
+//
+//	}
 
 	private void createVendorRequisition() {
 
 		final List<Vendor> vendors = vendorService.findAll();
-		final List<Requisition> requisitions = requisitionService.findAll();
+		final Requisition requisition = requisitionService.findByName("Requisition1");
 
 		for (Vendor vendor : vendors) {
-			List<VendorRequisition> vendorRequisitions = new ArrayList<>();
-			final Quotation quotation = new Quotation();
-			quotation.setCommonAudit(getCreateCommonAudit());
-			quotation.setNotifyToVendor(true);
-			quotation.setReplyFromVendor(false);
-
-			try {
-
-				final String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-
-				quotation.setLastDateOfSubmission(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			for (Requisition requisition : requisitions) {
-
-				VendorRequisition vendorRequisition = new VendorRequisition();
-				vendorRequisition.setRequisitionId(requisition.getId());
-				vendorRequisition.setVendorId(vendor.getId());
-				vendorRequisition.setQuotation(quotation);
-				vendorRequisitions.add(vendorRequisition);
-			}
-			quotation.setVendorRequisitions(vendorRequisitions);
-			quotationService.save(quotation);
+			VendorRequisition vendorRequisition = new VendorRequisition();
+			vendorRequisition.setRequisitionId(requisition.getId());
+			vendorRequisition.setVendorId(vendor.getId());
+			vendorRequisition.setNotifyToVendor(false);
+			vendorRequisition.setReplyFromVendor(false);
+			vendorRequisition.setCommonAudit(getCreateCommonAudit());
+			VendorRequisition vr= vendorRequisitionService.save(vendorRequisition);
+			System.out.println("VendorRequisition created :"+vr.getId());
 		}
 
 	}
@@ -296,15 +306,7 @@ public class DataScript {
 			requisition.setDescription("Requisition" + i);
 			requisition.setRemark("Test" + i);
 			requisition.setRequestedBy("Harshad" + i);
-			try {
-
-				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-
-				requisition.setExpectedDeliveryAt(new SimpleDateFormat("dd-MM-yyyy").parse(currentDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			requisition.setActive(true);
 
 			final List<RequisitionItem> requisitionItems = new ArrayList<>();
 			for (int j = 1; j <= 3; j++) {

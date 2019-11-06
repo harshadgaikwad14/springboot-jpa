@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -29,8 +27,7 @@ public class Requisition {
 	private String name;
 	private String description;
 	private String requestedBy;
-	@Temporal(TemporalType.DATE)
-	private Date expectedDeliveryAt;
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "requisition")
 	private List<RequisitionItem> requisitionItems;
 
@@ -38,7 +35,11 @@ public class Requisition {
 	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private Project project;
 
+	@OneToOne(mappedBy = "requisition")
+    private Quotation quotation;
+	
 	private String remark;
+	private boolean active;
 
 
 	public Long getId() {
@@ -65,13 +66,7 @@ public class Requisition {
 		this.description = description;
 	}
 
-	public Date getExpectedDeliveryAt() {
-		return expectedDeliveryAt;
-	}
-
-	public void setExpectedDeliveryAt(Date expectedDeliveryAt) {
-		this.expectedDeliveryAt = expectedDeliveryAt;
-	}
+	
 
 	public String getRemark() {
 		return remark;
@@ -107,12 +102,24 @@ public class Requisition {
 		this.requestedBy = requestedBy;
 	}
 
-	
-	@Override
-	public String toString() {
-		return "Requisition [id=" + id + ", name=" + name + ", description=" + description + ", requestedBy="
-				+ requestedBy + ", expectedDeliveryAt=" + expectedDeliveryAt + ", remark=" + remark + "]";
+	public boolean isActive() {
+		return active;
 	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public Quotation getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(Quotation quotation) {
+		this.quotation = quotation;
+	}
+
+	
+	
 
 	
 

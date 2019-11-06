@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -23,6 +21,8 @@ public class VendorRequisitionItem {
 
 	private Long requisitionItemId;
 
+	private BigDecimal rate;
+	private BigDecimal discountRate;
 	private BigDecimal amount;
 
 	public Long getId() {
@@ -56,5 +56,23 @@ public class VendorRequisitionItem {
 	public void setRequisitionItemId(Long requisitionItemId) {
 		this.requisitionItemId = requisitionItemId;
 	}
+
+	public BigDecimal getRate() {
+		return rate;
+	}
+
+	public void setRate(BigDecimal rate) {
+		this.rate = rate;
+	}
+
+	public BigDecimal getDiscountRate() {
+		return discountRate;
+	}
+
+	public void setDiscountRate(BigDecimal discountRate) {
+		this.discountRate = discountRate;
+	}
+	
+	
 
 }
