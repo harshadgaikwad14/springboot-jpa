@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,10 +21,16 @@ public class VendorRequisitionItem {
 	private Long vendorId;
 
 	private Long requisitionItemId;
+	
+	private Long quotationId;
 
 	private BigDecimal rate;
 	private BigDecimal discountRate;
 	private BigDecimal amount;
+	private String remark; 
+	
+	@Embedded
+	private CommonAudit commonAudit;
 
 	public Long getId() {
 		return id;
@@ -71,6 +78,30 @@ public class VendorRequisitionItem {
 
 	public void setDiscountRate(BigDecimal discountRate) {
 		this.discountRate = discountRate;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public CommonAudit getCommonAudit() {
+		return commonAudit;
+	}
+
+	public void setCommonAudit(CommonAudit commonAudit) {
+		this.commonAudit = commonAudit;
+	}
+
+	public Long getQuotationId() {
+		return quotationId;
+	}
+
+	public void setQuotationId(Long quotationId) {
+		this.quotationId = quotationId;
 	}
 	
 	

@@ -10,8 +10,13 @@ import com.example.demo.entity.VendorRequisition;
 @Repository
 public interface VendorRequisitionRepository extends CrudRepository<VendorRequisition, Long> {
 
-	public List<VendorRequisition>findByVendorId(Long vendorId);
-	public List<VendorRequisition>findByRequisitionId(Long requisitionId);
-	public VendorRequisition findByRequisitionIdAndVendorId(Long requisitionId,Long vendorId);
-}
+	public List<VendorRequisition> findByVendorId(Long vendorId);
 
+	public List<VendorRequisition> findByRequisitionId(Long requisitionId);
+
+	public List<VendorRequisition> findByIdAndRequisitionId(final Long quotationId, Long requisitionId);
+
+	public VendorRequisition findByQuotationIdAndVendorId(final Long quotationId, final Long vendorId);
+
+	public VendorRequisition findByRequisitionIdAndVendorId(Long requisitionId, Long vendorId);
+}

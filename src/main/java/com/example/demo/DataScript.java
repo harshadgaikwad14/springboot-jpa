@@ -142,20 +142,43 @@ public class DataScript {
 
 	public void requisition() {
 		createRequisition_RequisitionItems();
-		// getRequisition();
 
-	}
-
-	public void vendorRequisition() {
-		createVendorRequisition();
-	}
-
-	public void vendorRequisitionItem() {
-		// createVendorRequisitionItem();
 	}
 
 	public void quotation() {
 		createQuotation();
+		
+		vendorQuotationReply();
+	}
+
+	private void vendorQuotationReply() {
+		
+		final Quotation quotation = quotationService.findById(76l);
+		final VendorRequisition vendorRequisition = vendorRequisitionService.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		vendorRequisition.setNotifyToVendor(true);
+		vendorRequisition.setReplyFromVendor(true);
+		vendorRequisition.getCommonAudit().setUpdatedBy("User");
+		vendorRequisition.getCommonAudit().setUpdatedAt(new Date());
+		vendorRequisition.setRemark("Testing By Vendor");
+		final VendorRequisition vr =vendorRequisitionService.save(vendorRequisition);
+		System.out.println("Updated VendorRequisition "+vr.getId());
+		
+		List<VendorRequisitionItem> vendorRequisitionItems= vendorRequisitionItemService.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		for (VendorRequisitionItem vendorRequisitionItem : vendorRequisitionItems) {
+			
+			BigDecimal discount = new BigDecimal("7");
+			final RequisitionItem requisitionItem =requisitionItemService.findById(vendorRequisitionItem.getRequisitionItemId());
+			final BigDecimal quantity = new BigDecimal(requisitionItem.getQuantity());
+			vendorRequisitionItem.setAmount(discount.multiply(quantity));
+			vendorRequisitionItem.setRemark("Material Avialable");
+			vendorRequisitionItem.setRate(new BigDecimal("10"));
+			vendorRequisitionItem.setDiscountRate(discount);
+			vendorRequisitionItem.getCommonAudit().setUpdatedBy("Vendor");
+			vendorRequisitionItem.getCommonAudit().setUpdatedAt(new Date());
+			final  VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+			System.out.println("Updated VendorRequisitionItem "+vri.getId());
+		}
+		
 	}
 
 	private CommonAudit getCreateCommonAudit() {
@@ -164,12 +187,14 @@ public class DataScript {
 		commonAudit.setCreatedAt(new Date());
 		return commonAudit;
 	}
-
+	
+	
 	private void createQuotation() {
 
 		final Requisition requisition = requisitionService.findByName("Requisition1");
+		final List<Vendor> vendors = vendorService.findAll();
 
-		Quotation quotation = new Quotation();
+		final Quotation quotation = new Quotation();
 		quotation.setActive(true);
 		quotation.setCommonAudit(getCreateCommonAudit());
 		quotation.setRemark("Test");
@@ -184,114 +209,56 @@ public class DataScript {
 			e.printStackTrace();
 		}
 
-		Quotation q = quotationService.save(quotation);
+		final Quotation q = quotationService.save(quotation);
 		System.out.println("Quotation Created Successfully : " + q.getId());
 
-	}
-
-//	@Transactional
-//	private void createVendorRequisitionItem() {
-//
-//		for (int i = 1; i <= 4; i++) {
-//
-//			final Requisition requisition = requisitionService.findByName("Requisition" + i);
-//			if (requisition != null) {
-//
-//				final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
-//				List<VendorRequisition> VendorRequisitions = vendorRequisitionService
-//						.findByRequisitionId(requisition.getId());
-//				for (VendorRequisition vendorRequisition : VendorRequisitions) {
-//
-//					for (RequisitionItem requisitionItem : requisitionItems) {
-//
-//						final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
-//						vendorRequisitionItem.setRequisitionItemId(requisitionItem.getId());
-//						vendorRequisitionItem.setVendorId(vendorRequisition.getVendorId());
-//						vendorRequisitionItem.setAmount(new BigDecimal("1000"));
-//						VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
-//						System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
-//					}
-//
-//				}
-//			}
-//
-//		}
-//
-//	}
-
-	private void createVendorRequisition() {
-
-		final List<Vendor> vendors = vendorService.findAll();
-		final Requisition requisition = requisitionService.findByName("Requisition1");
-
-		for (Vendor vendor : vendors) {
-			VendorRequisition vendorRequisition = new VendorRequisition();
-			vendorRequisition.setRequisitionId(requisition.getId());
-			vendorRequisition.setVendorId(vendor.getId());
-			vendorRequisition.setNotifyToVendor(false);
-			vendorRequisition.setReplyFromVendor(false);
-			vendorRequisition.setCommonAudit(getCreateCommonAudit());
-			VendorRequisition vr= vendorRequisitionService.save(vendorRequisition);
-			System.out.println("VendorRequisition created :"+vr.getId());
-		}
+		createVendorRequisition(requisition, vendors,q);
+		createVendorRequisitionItem(requisition, vendors,q);
 
 	}
 
 	@Transactional
-	private void getRequisition() {
-		Requisition requisition = requisitionService.findByName("Requisition1");
-		System.out.println("****** BEFORE getRequisition >>> " + requisition);
-		List<RequisitionItem> requisitionItems = (List<RequisitionItem>) requisition.getRequisitionItems();
-		for (RequisitionItem requisitionItem : requisitionItems) {
-			System.out.println("****** BEFORE requisitionItem >>> " + requisitionItem);
-			long id = requisitionItem.getId();
-			if (id % 2 == 1) {
-				deleteRequisitionItem(requisitionItem);
+	private void createVendorRequisitionItem(final Requisition requisition, final List<Vendor> vendors,final Quotation quotation) {
+
+		if (requisition != null) {
+
+			final List<RequisitionItem> requisitionItems = requisition.getRequisitionItems();
+
+			for (final Vendor vendor : vendors) {
+
+				for (final RequisitionItem requisitionItem : requisitionItems) {
+
+					final VendorRequisitionItem vendorRequisitionItem = new VendorRequisitionItem();
+					vendorRequisitionItem.setRequisitionItemId(requisitionItem.getId());
+					vendorRequisitionItem.setVendorId(vendor.getId());
+					vendorRequisitionItem.setQuotationId(quotation.getId());
+					vendorRequisitionItem.setCommonAudit(getCreateCommonAudit());
+					final VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+					System.out.println("Crearted VendorRequisitionItem : " + vri.getId());
+				}
+
 			}
-
 		}
-
-		Requisition requisition2 = requisitionService.findByName("Requisition1");
-		System.out.println("****** After getRequisition >>> " + requisition2);
-		List<RequisitionItem> requisitionItems2 = (List<RequisitionItem>) requisition2.getRequisitionItems();
-		for (RequisitionItem requisitionItem2 : requisitionItems2) {
-			System.out.println("****** After requisitionItem >>> " + requisitionItem2);
-		}
-
-		final List<RequisitionItem> requisitionItems3 = new ArrayList<>();
-		for (int i = 10; i <= 15; i++) {
-
-			final Item item = itemService.findByName("Item" + i);
-			System.out.println("******** createRequisitionItem : Item >  " + item);
-			final Grade grade = gradeService.findByName("Grade" + i);
-			System.out.println("******** createRequisitionItem : grade >  " + grade);
-			final Unit unit = unitService.findByName("Unit" + 1);
-			System.out.println("******** createRequisitionItem : unit >  " + unit);
-			RequisitionItem requisitionItem = new RequisitionItem();
-			requisitionItem.setItem(item);
-			requisitionItem.setGrade(grade);
-			requisitionItem.setUnit(unit);
-			requisitionItem.setQuantity(100l);
-			requisitionItem.setUsedFor("Testing" + i);
-			requisitionItem.setCommonAudit(getCreateCommonAudit());
-			requisitionItem.setRequisition(requisition2);
-			requisitionItems3.add(requisitionItem);
-		}
-
-		requisition2.setRequisitionItems(requisitionItems3);
-
-		Project p = projectService.findByName("Project1");
-		requisition2.setProject(p);
-		requisitionService.save(requisition2);
-
-		Requisition requisition3 = requisitionService.findByName("Requisition1");
-		System.out.println("****** LAST getRequisition >>> " + requisition3);
-		final Project p3 = requisition3.getProject();
-		System.out.println("****** LAST getRequisition Project >>> " + p3);
-		System.out.println("****** LAST getRequisition Users >>> " + p3.getUsers());
 
 	}
 
+	private void createVendorRequisition(final Requisition requisition, final List<Vendor> vendors,final Quotation quotation) {
+
+		for (final Vendor vendor : vendors) {
+			final VendorRequisition vendorRequisition = new VendorRequisition();
+			vendorRequisition.setRequisitionId(requisition.getId());
+			vendorRequisition.setVendorId(vendor.getId());
+			vendorRequisition.setQuotationId(quotation.getId());
+			vendorRequisition.setNotifyToVendor(false);
+			vendorRequisition.setReplyFromVendor(false);
+			vendorRequisition.setCommonAudit(getCreateCommonAudit());
+			final VendorRequisition vr = vendorRequisitionService.save(vendorRequisition);
+			System.out.println("VendorRequisition created :" + vr.getId());
+		}
+
+	}
+
+	
 	@Transactional
 	private void deleteRequisitionItem(RequisitionItem requisitionItem) {
 		requisitionItemService.deleteRequisitionItem(requisitionItem);
@@ -306,7 +273,6 @@ public class DataScript {
 			requisition.setDescription("Requisition" + i);
 			requisition.setRemark("Test" + i);
 			requisition.setRequestedBy("Harshad" + i);
-			requisition.setActive(true);
 
 			final List<RequisitionItem> requisitionItems = new ArrayList<>();
 			for (int j = 1; j <= 3; j++) {

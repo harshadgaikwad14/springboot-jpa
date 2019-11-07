@@ -2,14 +2,11 @@ package com.example.demo.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -27,6 +24,8 @@ public class VendorRequisition {
 
 	private Long requisitionId;
 	
+	private Long quotationId;
+	
 	private boolean notifyToVendor;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notifyToVendorAt;
@@ -35,7 +34,7 @@ public class VendorRequisition {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date replyFromVendorAt;
 	
-	private String vendorRemark;
+	private String remark;
 	
 	@Embedded
 	private CommonAudit commonAudit;
@@ -106,15 +105,23 @@ public class VendorRequisition {
 		this.commonAudit = commonAudit;
 	}
 
-	public String getVendorRemark() {
-		return vendorRemark;
+	public String getRemark() {
+		return remark;
 	}
 
-	public void setVendorRemark(String vendorRemark) {
-		this.vendorRemark = vendorRemark;
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
+	public Long getQuotationId() {
+		return quotationId;
+	}
 
+	public void setQuotationId(Long quotationId) {
+		this.quotationId = quotationId;
+	}
+
+	
 	
 
 }

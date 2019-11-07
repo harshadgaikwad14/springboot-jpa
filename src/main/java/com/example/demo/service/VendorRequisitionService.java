@@ -50,4 +50,10 @@ public class VendorRequisitionService {
 	public VendorRequisition findByRequisitionIdAndVendorId(final Long requisitionId, final Long vendorId) {
 		return vendorRequisitionRepository.findByRequisitionIdAndVendorId(requisitionId, vendorId);
 	}
+	
+	public VendorRequisition findByQuotationIdAndVendorId(final Long quotationId, final Long vendorId) {
+		return vendorRequisitionRepository.findByQuotationIdAndVendorId(quotationId, vendorId);
+	}
+	
+	
 }

@@ -39,4 +39,17 @@ public class VendorRequisitionItemService {
 		return (List<VendorRequisitionItem>) vendorRequisitionItemRepository.findAllById(ids);
 	}
 
+	public List<VendorRequisitionItem> findAlfindByQuotationIdlById(final Long quotationId) {
+		return (List<VendorRequisitionItem>) vendorRequisitionItemRepository.findByQuotationId(quotationId);
+	}
+
+	public List<VendorRequisitionItem> findByQuotationIdAndVendorId(final Long quotationId, final Long vendorId) {
+		return (List<VendorRequisitionItem>) vendorRequisitionItemRepository.findByQuotationIdAndVendorId(quotationId,
+				vendorId);
+	}
+
+	public VendorRequisitionItem findByQuotationIdAndVendorId(final Long quotationId,final Long vendorId,final Long requisitionItemId) {
+		return  vendorRequisitionItemRepository.findByQuotationIdAndVendorIdAndRequisitionItemId(quotationId, vendorId, requisitionItemId);
+	}
+
 }
