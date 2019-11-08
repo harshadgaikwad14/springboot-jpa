@@ -67,7 +67,7 @@ public class Project {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<User> users = new ArrayList<User>();
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<Requisition> requisitions = new ArrayList<Requisition>();
 
 	@Embedded

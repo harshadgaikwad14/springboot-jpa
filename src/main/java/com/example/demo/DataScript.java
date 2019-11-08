@@ -122,6 +122,7 @@ public class DataScript {
 	private void getProjectDetails() {
 		
 		final Project project= projectService.findByName("Project1");
+		final List<User> users = project.getUsers();
 		
 	}
 
@@ -287,6 +288,9 @@ public class DataScript {
 
 			}
 		}
+		
+		final Requisition r= requisitionService.findById(requisition.getId());
+		final List<RequisitionItem> ris =r.getRequisitionItems();
 
 	}
 

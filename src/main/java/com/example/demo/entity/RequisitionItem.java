@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class RequisitionItem {
 	private Long quantity;
 	private String usedFor;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "requisition_id" ,referencedColumnName = "id")
 	private Requisition requisition;
 	

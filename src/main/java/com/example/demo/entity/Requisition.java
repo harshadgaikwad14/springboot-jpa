@@ -28,10 +28,10 @@ public class Requisition {
 	private String description;
 	private String requestedBy;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "requisition")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "requisition")
 	private List<RequisitionItem> requisitionItems;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private Project project;
 
