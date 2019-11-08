@@ -22,10 +22,8 @@ public class Privilege {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
-	@ManyToMany(mappedBy = "priviliges", fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Role> roles;
-
-	
 
 	public Long getId() {
 		return id;
@@ -58,12 +56,5 @@ public class Privilege {
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
 	}
-
-	
-	@Override
-	public String toString() {
-		return "Privilege [id=" + id + ", name=" + name + ", description=" + description + "]";
-	}
-	
 
 }

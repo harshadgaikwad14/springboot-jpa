@@ -35,7 +35,7 @@ public class Requisition {
 	@JoinColumn(name = "project_id", referencedColumnName = "id")
 	private Project project;
 
-	@OneToOne(mappedBy = "requisition")
+	@OneToOne
     private Quotation quotation;
 	
 	private String remark;

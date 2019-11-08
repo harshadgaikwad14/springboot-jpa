@@ -64,10 +64,10 @@ public class Project {
 			@AttributeOverride(name = "emailId", column = @Column(name = "structural_email_id")) })
 	private Structural structural;
 	
-	@ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<User> users = new ArrayList<User>();
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Requisition> requisitions = new ArrayList<Requisition>();
 
 	@Embedded

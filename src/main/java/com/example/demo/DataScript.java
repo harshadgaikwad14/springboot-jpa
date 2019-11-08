@@ -24,6 +24,7 @@ import com.example.demo.entity.Grade;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
 import com.example.demo.entity.Project;
+import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.entity.Quotation;
 import com.example.demo.entity.Requisition;
 import com.example.demo.entity.RequisitionItem;
@@ -42,6 +43,7 @@ import com.example.demo.service.GradeService;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
 import com.example.demo.service.ProjectService;
+import com.example.demo.service.PurchaseOrderService;
 import com.example.demo.service.QuotationService;
 import com.example.demo.service.RequisitionItemService;
 import com.example.demo.service.RequisitionService;
@@ -109,8 +111,18 @@ public class DataScript {
 	@Autowired
 	private QuotationService quotationService;
 
+	@Autowired
+	private PurchaseOrderService purchaseOrderService;
+
 	public void project() {
 		createProject();
+		getProjectDetails();
+	}
+
+	private void getProjectDetails() {
+		
+		final Project project= projectService.findByName("Project1");
+		
 	}
 
 	public void vendorType() {
@@ -147,38 +159,74 @@ public class DataScript {
 
 	public void quotation() {
 		createQuotation();
-		
+
 		vendorQuotationReply();
 	}
 
-	private void vendorQuotationReply() {
-		
+	public void purchaseOrder() {
+		createPurchaseOrder();
+	}
+
+	private void createPurchaseOrder() {
+		System.out.println("Create Purchase Order");
 		final Quotation quotation = quotationService.findById(76l);
-		final VendorRequisition vendorRequisition = vendorRequisitionService.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		List<VendorRequisitionItem> vendorRequisitionItems = vendorRequisitionItemService
+				.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		for (VendorRequisitionItem vendorRequisitionItem : vendorRequisitionItems) {
+
+			final RequisitionItem requisitionItem = requisitionItemService
+					.findById(vendorRequisitionItem.getRequisitionItemId());
+			final BigDecimal discountRate = new BigDecimal("8");
+			final BigDecimal quantity = new BigDecimal(requisitionItem.getQuantity());
+			vendorRequisitionItem.setDiscountAmount(discountRate.multiply(quantity));
+
+			vendorRequisitionItem.setDiscountRate(discountRate);
+
+			vendorRequisitionItem.getCommonAudit().setUpdatedBy("Vendor");
+			vendorRequisitionItem.getCommonAudit().setUpdatedAt(new Date());
+			final VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+			System.out.println("Updated VendorRequisitionItem " + vri.getId());
+		}
+		
+		final PurchaseOrder purchaseOrder = new PurchaseOrder();
+		purchaseOrder.setCommonAudit(getCreateCommonAudit());
+		purchaseOrder.setQuotation(quotation);
+		purchaseOrder.setRemark("Done");
+		purchaseOrderService.save(purchaseOrder );
+
+	}
+
+	private void vendorQuotationReply() {
+
+		final Quotation quotation = quotationService.findById(76l);
+		final VendorRequisition vendorRequisition = vendorRequisitionService
+				.findByQuotationIdAndVendorId(quotation.getId(), 25l);
 		vendorRequisition.setNotifyToVendor(true);
 		vendorRequisition.setReplyFromVendor(true);
 		vendorRequisition.getCommonAudit().setUpdatedBy("User");
 		vendorRequisition.getCommonAudit().setUpdatedAt(new Date());
 		vendorRequisition.setRemark("Testing By Vendor");
-		final VendorRequisition vr =vendorRequisitionService.save(vendorRequisition);
-		System.out.println("Updated VendorRequisition "+vr.getId());
-		
-		List<VendorRequisitionItem> vendorRequisitionItems= vendorRequisitionItemService.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		final VendorRequisition vr = vendorRequisitionService.save(vendorRequisition);
+		System.out.println("Updated VendorRequisition " + vr.getId());
+
+		List<VendorRequisitionItem> vendorRequisitionItems = vendorRequisitionItemService
+				.findByQuotationIdAndVendorId(quotation.getId(), 25l);
 		for (VendorRequisitionItem vendorRequisitionItem : vendorRequisitionItems) {
-			
-			BigDecimal discount = new BigDecimal("7");
-			final RequisitionItem requisitionItem =requisitionItemService.findById(vendorRequisitionItem.getRequisitionItemId());
+
+			BigDecimal rate = new BigDecimal("10");
+			final RequisitionItem requisitionItem = requisitionItemService
+					.findById(vendorRequisitionItem.getRequisitionItemId());
 			final BigDecimal quantity = new BigDecimal(requisitionItem.getQuantity());
-			vendorRequisitionItem.setAmount(discount.multiply(quantity));
+			vendorRequisitionItem.setAmount(rate.multiply(quantity));
 			vendorRequisitionItem.setRemark("Material Avialable");
 			vendorRequisitionItem.setRate(new BigDecimal("10"));
-			vendorRequisitionItem.setDiscountRate(discount);
+
 			vendorRequisitionItem.getCommonAudit().setUpdatedBy("Vendor");
 			vendorRequisitionItem.getCommonAudit().setUpdatedAt(new Date());
-			final  VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
-			System.out.println("Updated VendorRequisitionItem "+vri.getId());
+			final VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
+			System.out.println("Updated VendorRequisitionItem " + vri.getId());
 		}
-		
+
 	}
 
 	private CommonAudit getCreateCommonAudit() {
@@ -187,8 +235,7 @@ public class DataScript {
 		commonAudit.setCreatedAt(new Date());
 		return commonAudit;
 	}
-	
-	
+
 	private void createQuotation() {
 
 		final Requisition requisition = requisitionService.findByName("Requisition1");
@@ -212,13 +259,14 @@ public class DataScript {
 		final Quotation q = quotationService.save(quotation);
 		System.out.println("Quotation Created Successfully : " + q.getId());
 
-		createVendorRequisition(requisition, vendors,q);
-		createVendorRequisitionItem(requisition, vendors,q);
+		createVendorRequisition(requisition, vendors, q);
+		createVendorRequisitionItem(requisition, vendors, q);
 
 	}
 
 	@Transactional
-	private void createVendorRequisitionItem(final Requisition requisition, final List<Vendor> vendors,final Quotation quotation) {
+	private void createVendorRequisitionItem(final Requisition requisition, final List<Vendor> vendors,
+			final Quotation quotation) {
 
 		if (requisition != null) {
 
@@ -242,7 +290,8 @@ public class DataScript {
 
 	}
 
-	private void createVendorRequisition(final Requisition requisition, final List<Vendor> vendors,final Quotation quotation) {
+	private void createVendorRequisition(final Requisition requisition, final List<Vendor> vendors,
+			final Quotation quotation) {
 
 		for (final Vendor vendor : vendors) {
 			final VendorRequisition vendorRequisition = new VendorRequisition();
@@ -258,7 +307,6 @@ public class DataScript {
 
 	}
 
-	
 	@Transactional
 	private void deleteRequisitionItem(RequisitionItem requisitionItem) {
 		requisitionItemService.deleteRequisitionItem(requisitionItem);
@@ -579,6 +627,10 @@ public class DataScript {
 		role3.setPriviliges(privileges3);
 		final Role r3 = roleService.save(role3);
 		System.out.println("Role Created " + r3);
+		
+		final Role superRole = roleService.findByName("ROLE_SUPER");
+		final List<Privilege> privileges  = (List<Privilege>) superRole.getPriviliges();  
+		System.out.println("Role Privileges : "+privileges);
 
 	}
 
@@ -627,6 +679,8 @@ public class DataScript {
 		user1.setProjects(projects);
 		final User u1 = userService.save(user1);
 		System.out.println("User Created " + u1);
+		
+		final User u = userService.findByUserName("harshad.gaikwad");
 
 	}
 

@@ -21,7 +21,7 @@ public class Approver {
 	private String userName;
 	private Long level;
 	private String description;
-	@ManyToMany(mappedBy = "approvers", fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<User> users;
 
 	public Long getId() {

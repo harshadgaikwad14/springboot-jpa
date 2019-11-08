@@ -25,7 +25,7 @@ public class Role {
 	private String name;
 	private String description;
 
-	@ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<User> users;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -72,11 +72,7 @@ public class Role {
 		this.priviliges = priviliges;
 	}
 
-	@Override
-	public String toString() {
-		return "Role [id=" + id + ", name=" + name + ", description=" + description + ", priviliges=" + priviliges
-				+ "]";
-	}
+	
 
 	
 	

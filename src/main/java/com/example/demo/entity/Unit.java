@@ -26,11 +26,11 @@ public class Unit {
 	private String name;
 	private String description;
 
-	@ManyToMany(mappedBy = "units", fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Grade> grades;
 
 
-	@OneToMany(mappedBy = "unit")
+	@OneToMany
 	private List<RequisitionItem> requisitionItems;
 
 

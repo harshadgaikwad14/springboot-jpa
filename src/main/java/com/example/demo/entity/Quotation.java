@@ -35,6 +35,10 @@ public class Quotation {
 	@OneToOne
 	@JoinColumn(name = "requisition_id")
 	private Requisition requisition; 
+	
+	@OneToOne
+	@JoinColumn(name = "purchase_order_id",referencedColumnName = "id")
+	private PurchaseOrder purchaseOrder;
 
 	@Embedded
 	private CommonAudit commonAudit;

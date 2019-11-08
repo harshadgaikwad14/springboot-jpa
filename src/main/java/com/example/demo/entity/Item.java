@@ -30,11 +30,10 @@ public class Item {
 	private String description;
 
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "items_grades", joinColumns = @JoinColumn(referencedColumnName = "id", name = "item_id"), inverseJoinColumns = @JoinColumn(name = "grade_id", referencedColumnName = "id"))
 	private Collection<Grade> grades;
 
-	@OneToMany(mappedBy = "item")
+	@OneToMany
 	private List<RequisitionItem> requisitionItems;
 
 	@Embedded

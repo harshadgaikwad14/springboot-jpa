@@ -27,6 +27,7 @@ public class VendorRequisitionItem {
 	private BigDecimal rate;
 	private BigDecimal discountRate;
 	private BigDecimal amount;
+	private BigDecimal discountAmount;
 	private String remark; 
 	
 	@Embedded
@@ -102,6 +103,14 @@ public class VendorRequisitionItem {
 
 	public void setQuotationId(Long quotationId) {
 		this.quotationId = quotationId;
+	}
+
+	public BigDecimal getDiscountAmount() {
+		return discountAmount;
+	}
+
+	public void setDiscountAmount(BigDecimal discountAmount) {
+		this.discountAmount = discountAmount;
 	}
 	
 	

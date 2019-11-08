@@ -23,7 +23,7 @@ public class VendorType {
 	private String name;
 	private String description;
 	
-	@OneToMany(mappedBy = "vendorType")
+	@OneToMany
 	private List<Vendor> vendors;
 	
 	@Embedded

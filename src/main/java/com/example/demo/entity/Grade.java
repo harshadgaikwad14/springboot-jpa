@@ -29,16 +29,14 @@ public class Grade {
 	private String name;
 	private String description;
 
-	@ManyToMany(mappedBy = "grades",fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.TRUE)
+	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Item> items;
 
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name = "grades_units", joinColumns = @JoinColumn(referencedColumnName = "id", name = "grade_id"), inverseJoinColumns = @JoinColumn(name = "unit_id", referencedColumnName = "id"))
 	private Collection<Unit> units;
 
-	@OneToMany(mappedBy = "grade")
+	@OneToMany
 	private List<RequisitionItem> requisitionItems;
 
 
