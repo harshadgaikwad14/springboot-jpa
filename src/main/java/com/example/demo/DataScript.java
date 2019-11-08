@@ -170,9 +170,17 @@ public class DataScript {
 
 	private void createPurchaseOrder() {
 		System.out.println("Create Purchase Order");
+		
 		final Quotation quotation = quotationService.findById(76l);
 		List<VendorRequisitionItem> vendorRequisitionItems = vendorRequisitionItemService
 				.findByQuotationIdAndVendorId(quotation.getId(), 25l);
+		final PurchaseOrder purchaseOrder = new PurchaseOrder();
+		purchaseOrder.setCommonAudit(getCreateCommonAudit());
+		purchaseOrder.setQuotation(quotation);
+		purchaseOrder.setRemark("Done");
+		
+		purchaseOrderService.save(purchaseOrder );
+		List<VendorRequisitionItem> updatedVendorRequisitionItems = new ArrayList<>();
 		for (VendorRequisitionItem vendorRequisitionItem : vendorRequisitionItems) {
 
 			final RequisitionItem requisitionItem = requisitionItemService
@@ -185,15 +193,14 @@ public class DataScript {
 
 			vendorRequisitionItem.getCommonAudit().setUpdatedBy("Vendor");
 			vendorRequisitionItem.getCommonAudit().setUpdatedAt(new Date());
+			vendorRequisitionItem.setPurchaseOrder(purchaseOrder);
+			//updatedVendorRequisitionItems.add(vendorRequisitionItem);
 			final VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
 			System.out.println("Updated VendorRequisitionItem " + vri.getId());
 		}
 		
-		final PurchaseOrder purchaseOrder = new PurchaseOrder();
-		purchaseOrder.setCommonAudit(getCreateCommonAudit());
-		purchaseOrder.setQuotation(quotation);
-		purchaseOrder.setRemark("Done");
-		purchaseOrderService.save(purchaseOrder );
+	
+		
 
 	}
 

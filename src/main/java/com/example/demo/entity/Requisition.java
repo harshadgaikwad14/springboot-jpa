@@ -36,7 +36,7 @@ public class Requisition implements Serializable {
 	private String description;
 	private String requestedBy;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "requisition")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<RequisitionItem> requisitionItems;
 
 	@ManyToOne(fetch = FetchType.LAZY)

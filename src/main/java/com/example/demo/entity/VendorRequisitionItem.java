@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -37,6 +39,10 @@ public class VendorRequisitionItem implements Serializable {
 	private BigDecimal amount;
 	private BigDecimal discountAmount;
 	private String remark; 
+	
+	@ManyToOne
+	@JoinColumn(name = "purchase_order_id",referencedColumnName = "id")
+	private PurchaseOrder purchaseOrder;
 	
 	@Embedded
 	private CommonAudit commonAudit;
@@ -119,6 +125,20 @@ public class VendorRequisitionItem implements Serializable {
 
 	public void setDiscountAmount(BigDecimal discountAmount) {
 		this.discountAmount = discountAmount;
+	}
+
+	/**
+	 * @return the purchaseOrder
+	 */
+	public PurchaseOrder getPurchaseOrder() {
+		return purchaseOrder;
+	}
+
+	/**
+	 * @param purchaseOrder the purchaseOrder to set
+	 */
+	public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+		this.purchaseOrder = purchaseOrder;
 	}
 	
 	

@@ -1,13 +1,17 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
@@ -33,9 +37,9 @@ public class PurchaseOrder implements Serializable {
 	@JoinColumn(name = "quotation_id",referencedColumnName = "id")
 	private Quotation quotation;
 	
-	/*
-	 * @OneToMany private List<VendorRequisitionItem> vendorRequisitionItem;
-	 */
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<VendorRequisitionItem> vendorRequisitionItems;
+
 	
 	@Embedded
 	private CommonAudit commonAudit;
@@ -85,6 +89,19 @@ public class PurchaseOrder implements Serializable {
 		this.quotation = quotation;
 	}
 
+	/**
+	 * @return the vendorRequisitionItems
+	 */
+	public List<VendorRequisitionItem> getVendorRequisitionItems() {
+		return vendorRequisitionItems;
+	}
+
+	/**
+	 * @param vendorRequisitionItems the vendorRequisitionItems to set
+	 */
+	public void setVendorRequisitionItems(List<VendorRequisitionItem> vendorRequisitionItems) {
+		this.vendorRequisitionItems = vendorRequisitionItems;
+	}
 
 
 }
