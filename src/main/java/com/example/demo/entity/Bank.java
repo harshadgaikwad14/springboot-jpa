@@ -1,9 +1,18 @@
 package com.example.demo.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Bank {
+public class Bank implements Serializable {
+
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	
 	private String name;

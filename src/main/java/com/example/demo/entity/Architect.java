@@ -1,12 +1,18 @@
 package com.example.demo.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Architect {
+public class Architect implements Serializable {
 
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String contactNo;
 	private String emailId;
