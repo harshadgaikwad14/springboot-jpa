@@ -37,8 +37,6 @@ public class PurchaseOrder implements Serializable {
 	@JoinColumn(name = "quotation_id",referencedColumnName = "id")
 	private Quotation quotation;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<VendorRequisitionItem> vendorRequisitionItems;
 
 	
 	@Embedded
@@ -89,19 +87,6 @@ public class PurchaseOrder implements Serializable {
 		this.quotation = quotation;
 	}
 
-	/**
-	 * @return the vendorRequisitionItems
-	 */
-	public List<VendorRequisitionItem> getVendorRequisitionItems() {
-		return vendorRequisitionItems;
-	}
-
-	/**
-	 * @param vendorRequisitionItems the vendorRequisitionItems to set
-	 */
-	public void setVendorRequisitionItems(List<VendorRequisitionItem> vendorRequisitionItems) {
-		this.vendorRequisitionItems = vendorRequisitionItems;
-	}
-
+	
 
 }

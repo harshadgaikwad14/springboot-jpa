@@ -48,7 +48,7 @@ public class VendorRequisitionItemService {
 				vendorId);
 	}
 
-	public VendorRequisitionItem findByQuotationIdAndVendorId(final Long quotationId,final Long vendorId,final Long requisitionItemId) {
+	public VendorRequisitionItem findByQuotationIdAndVendorIdAndRequisitionItemId(final Long quotationId,final Long vendorId,final Long requisitionItemId) {
 		return  vendorRequisitionItemRepository.findByQuotationIdAndVendorIdAndRequisitionItemId(quotationId, vendorId, requisitionItemId);
 	}
 

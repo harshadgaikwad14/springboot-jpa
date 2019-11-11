@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -40,7 +40,7 @@ public class VendorRequisitionItem implements Serializable {
 	private BigDecimal discountAmount;
 	private String remark; 
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "purchase_order_id",referencedColumnName = "id")
 	private PurchaseOrder purchaseOrder;
 	
