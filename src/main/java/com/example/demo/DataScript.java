@@ -154,6 +154,8 @@ public class DataScript {
 		projectService.findBySubDivisionName("Div1",0, 4);
 		projectService.testJPASpecification();
 		
+		
+		
 	}
 
 	public void vendorType() {

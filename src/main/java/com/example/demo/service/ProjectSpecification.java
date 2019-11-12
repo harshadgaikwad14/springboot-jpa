@@ -25,6 +25,13 @@ public class ProjectSpecification {
 		};
 	}
 	
+	public static Specification<Project> orderByAddress() {
+		return (root, query, cb) -> {
+			query.orderBy(cb.asc(root.get("address")));
+			return cb.conjunction();
+		};
+	}
+	
 	public static Specification<Project> likeAddressOrSubDivisionContains(String address,String subDivisionName) {
         return (root, query, cb) -> {
             final String containsLikePattern1 = getContainsLikePattern(address);

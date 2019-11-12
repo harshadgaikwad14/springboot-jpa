@@ -137,6 +137,11 @@ public class ProjectService {
 		for (Project project : projects4) {
 			System.out.println("likeAddressOrSubDivisionContains spec >> "+project);
 		}
+		final Specification<Project> spec3 = ProjectSpecification.orderByAddress();
+		Page<Project> projects5 =projectRepository.findAll(spec3, paging);
+		for (Project project : projects5) {
+			System.out.println("orderByAddress spec >> "+project);
+		}
 		
 		
 	}
