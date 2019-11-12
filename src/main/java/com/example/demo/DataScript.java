@@ -121,8 +121,38 @@ public class DataScript {
 
 	private void getProjectDetails() {
 		
-		final Project project= projectService.findByName("Project1");
-		final List<User> users = project.getUsers();
+//		Get All Project Without Pagination
+//		final List<Project> projects= projectService.findAll();
+//		for (Project project : projects) {
+//			
+//			System.out.println(project);
+//			
+//		}
+		
+		
+	    
+		final List<Project> projects=projectService.findAll(1, 5, "id");
+		for (Project project : projects) {
+			System.out.println(project);
+		}
+		
+		int totalRecordCount = 50;
+	    int page = 1;
+	    int size = 8;
+	    int totalPages = (int) Math.ceil((double) totalRecordCount / size);
+	    int contentSize = page + 1 < totalPages ? size : totalRecordCount - size * page;
+	    System.out.println("contentSize : "+contentSize);
+	    System.out.println("totalPages : "+totalPages);
+	    
+	    
+	    final List<Project> findAllGroupBySort=projectService.findAllGroupBySort();
+		for (Project project : findAllGroupBySort) {
+			System.out.println(project);
+		}
+		
+		
+		projectService.findBySubDivisionName("Div1",0, 4);
+		projectService.testJPASpecification();
 		
 	}
 
@@ -525,12 +555,21 @@ public class DataScript {
 
 	public void createProject() {
 
-		for (int i = 1; i <= 10; i++) {
+		for (int i = 1; i <= 100; i++) {
 
 			final Project project = new Project();
 			project.setName("Project" + i);
 			project.setDescription("Project" + i + " Desc");
-			project.setActive(true);
+			if(i%2==0) {
+				
+				project.setActive(true);
+				project.setSubDivisionName("Div2");
+			}
+			else {
+				project.setActive(false);
+				project.setSubDivisionName("Div1");
+			}
+				
 			try {
 
 				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -543,7 +582,8 @@ public class DataScript {
 			}
 			project.setAddress("Mumbai" + i);
 			project.setRemark("Test" + i);
-			project.setSubDivisionName("Goregaon" + i);
+			
+			
 
 			final ContactPerson contactPerson = new ContactPerson();
 			contactPerson.setName("Harshad" + i);

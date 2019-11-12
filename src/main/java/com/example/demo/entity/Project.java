@@ -207,6 +207,14 @@ public class Project implements Serializable {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+	@Override
+	public String toString() {
+		return "Project [id=" + id + ", name=" + name + ", description=" + description + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", subDivisionName=" + subDivisionName + ", remark=" + remark + ", address="
+				+ address + ", active=" + active + ", contactPerson=" + contactPerson + ", client=" + client
+				+ ", architect=" + architect + ", structural=" + structural + ", commonAudit=" + commonAudit + "]";
+	}
 	
 
 	
