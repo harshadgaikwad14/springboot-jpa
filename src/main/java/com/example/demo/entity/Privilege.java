@@ -9,7 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.envers.Audited;
 
@@ -29,9 +32,18 @@ public class Privilege implements Serializable {
 	@Column(unique = true, nullable = false)
 	private String name;
 	private String description;
+	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private Collection<Role> roles;
+	
+	@OneToOne
+	@JoinColumn(name = "operation_id")
+	private Operation operation;
 
+	@OneToOne
+	@JoinColumn(name = "module_id")
+	private Module module;
+	
 	public Long getId() {
 		return id;
 	}
@@ -63,5 +75,35 @@ public class Privilege implements Serializable {
 	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
 	}
+
+	/**
+	 * @return the operation
+	 */
+	public Operation getOperation() {
+		return operation;
+	}
+
+	/**
+	 * @param operation the operation to set
+	 */
+	public void setOperation(Operation operation) {
+		this.operation = operation;
+	}
+
+	/**
+	 * @return the module
+	 */
+	public Module getModule() {
+		return module;
+	}
+
+	/**
+	 * @param module the module to set
+	 */
+	public void setModule(Module module) {
+		this.module = module;
+	}
+	
+	
 
 }

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,6 @@ public class QuotationService {
 		return quotationRepository.save(quotation);
 	}
 
-	
-
 	public List<Quotation> findAll() {
 
 		return (List<Quotation>) quotationRepository.findAll();
@@ -30,7 +29,12 @@ public class QuotationService {
 	}
 
 	public Quotation findById(final Long id) {
-		return quotationRepository.findById(id).get();
+		Optional<Quotation> quotation = quotationRepository.findById(id);
+		if (quotation.isPresent()) {
+
+			return quotationRepository.findById(id).get();
+		}
+		return null;
 	}
 
 	public List<Quotation> findAll(final Long id) {

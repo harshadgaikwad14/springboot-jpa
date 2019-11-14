@@ -18,8 +18,11 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		dataScript.operation();
+		dataScript.module();
+		dataScript.privilege();
 //		dataScript.createApprover();
-//		dataScript.createPrivilege();
+//		
 //		dataScript.createRole();
 //		dataScript.project();
 //		dataScript.createUser();
@@ -32,7 +35,6 @@ public class SpringbootJpaApplication implements CommandLineRunner {
 //		dataScript.requisition();
 //		dataScript.quotation();
 //		dataScript.purchaseOrder();
-		dataScript.product_category();
 	}
 
 }
