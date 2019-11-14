@@ -17,12 +17,16 @@ import org.springframework.stereotype.Component;
 import com.example.demo.entity.Approver;
 import com.example.demo.entity.Architect;
 import com.example.demo.entity.Bank;
+import com.example.demo.entity.Category;
+import com.example.demo.entity.CategoryGroup;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.CommonAudit;
 import com.example.demo.entity.ContactPerson;
 import com.example.demo.entity.Grade;
 import com.example.demo.entity.Item;
 import com.example.demo.entity.Privilege;
+import com.example.demo.entity.Product;
+import com.example.demo.entity.ProductProjection;
 import com.example.demo.entity.Project;
 import com.example.demo.entity.PurchaseOrder;
 import com.example.demo.entity.Quotation;
@@ -39,9 +43,11 @@ import com.example.demo.entity.VendorRequisition;
 import com.example.demo.entity.VendorRequisitionItem;
 import com.example.demo.entity.VendorType;
 import com.example.demo.service.ApproverService;
+import com.example.demo.service.CategoryService;
 import com.example.demo.service.GradeService;
 import com.example.demo.service.ItemService;
 import com.example.demo.service.PrivilegeService;
+import com.example.demo.service.ProductService;
 import com.example.demo.service.ProjectService;
 import com.example.demo.service.PurchaseOrderService;
 import com.example.demo.service.QuotationService;
@@ -114,13 +120,80 @@ public class DataScript {
 	@Autowired
 	private PurchaseOrderService purchaseOrderService;
 
+	@Autowired
+	private ProductService productService;
+
+	@Autowired
+	private CategoryService categoryService;
+
 	public void project() {
 		createProject();
 		getProjectDetails();
 	}
 
-	private void getProjectDetails() {
+	@Transactional
+	public void product_category() {
+		for (int i = 1; i <= 5; i++) {
+
+			Category category = new Category();
+			category.setName("Cat" + i);
+			categoryService.save(category);
+		}
+
+		for (int i = 1; i <= 30; i++) {
+
+			Product product = new Product();
+			if (i % 5 == 0) {
+				Category category = categoryService.findByName("Cat5");
+				product.setCategory(category);
+				product.setQuantity(5);
+				product.setPrice(new BigDecimal("5").multiply(new BigDecimal(i)));
+				product.setFeatured(true);
+
+			} else if (i % 3 == 0) {
+				Category category = categoryService.findByName("Cat3");
+				product.setCategory(category);
+				product.setQuantity(3);
+				product.setPrice(new BigDecimal("3").multiply(new BigDecimal(i)));
+				product.setFeatured(false);
+
+			} else if (i % 2 == 0) {
+				Category category = categoryService.findByName("Cat2");
+				product.setCategory(category);
+				product.setQuantity(2);
+				product.setPrice(new BigDecimal("2").multiply(new BigDecimal(i)));
+				product.setFeatured(true);
+
+			} else {
+				Category category = categoryService.findByName("Cat1");
+				product.setCategory(category);
+				product.setQuantity(1);
+				product.setPrice(new BigDecimal("1").multiply(new BigDecimal(i)));
+				product.setFeatured(false);
+			}
+			product.setName("Product" + i);
+			product.setDescription("Product" + i);
+			product.setPhoto("Product" + i);
+
+			productService.save(product);
+		}
+
+		final List<CategoryGroup> categoryGroups = productService.groupBy();
+		for (final CategoryGroup categoryGroup : categoryGroups) {
+
+			System.out.println(categoryGroup);
+		}
 		
+		
+		final List<ProductProjection> productProjections =productService.productProjection();
+		for (ProductProjection productProjection : productProjections) {
+			System.out.println("productProjection : "+productProjection);
+		}
+		
+	}
+
+	private void getProjectDetails() {
+
 //		Get All Project Without Pagination
 //		final List<Project> projects= projectService.findAll();
 //		for (Project project : projects) {
@@ -128,34 +201,28 @@ public class DataScript {
 //			System.out.println(project);
 //			
 //		}
-		
-		
-	    
-		final List<Project> projects=projectService.findAll(1, 5, "id");
+
+		final List<Project> projects = projectService.findAll(1, 5, "id");
 		for (Project project : projects) {
 			System.out.println(project);
 		}
-		
+
 		int totalRecordCount = 50;
-	    int page = 1;
-	    int size = 8;
-	    int totalPages = (int) Math.ceil((double) totalRecordCount / size);
-	    int contentSize = page + 1 < totalPages ? size : totalRecordCount - size * page;
-	    System.out.println("contentSize : "+contentSize);
-	    System.out.println("totalPages : "+totalPages);
-	    
-	    
-	    final List<Project> findAllGroupBySort=projectService.findAllGroupBySort();
+		int page = 1;
+		int size = 8;
+		int totalPages = (int) Math.ceil((double) totalRecordCount / size);
+		int contentSize = page + 1 < totalPages ? size : totalRecordCount - size * page;
+		System.out.println("contentSize : " + contentSize);
+		System.out.println("totalPages : " + totalPages);
+
+		final List<Project> findAllGroupBySort = projectService.findAllGroupBySort();
 		for (Project project : findAllGroupBySort) {
 			System.out.println(project);
 		}
-		
-		
-		projectService.findBySubDivisionName("Div1",0, 4);
+
+		projectService.findBySubDivisionName("Div1", 0, 4);
 		projectService.testJPASpecification();
-		
-		
-		
+
 	}
 
 	public void vendorType() {
@@ -202,22 +269,25 @@ public class DataScript {
 
 	private void createPurchaseOrder() {
 		System.out.println("Create Purchase Order");
-		
+
 		final Quotation quotation = quotationService.findById(76l);
-	
-		
-		final VendorRequisitionItem vendorRequisitionItem1 = vendorRequisitionItemService.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 25l, 61l);
-		final VendorRequisitionItem vendorRequisitionItem2 = vendorRequisitionItemService.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 26l, 62l);
-		final VendorRequisitionItem vendorRequisitionItem3 = vendorRequisitionItemService.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 27l, 63l);
+
+		final VendorRequisitionItem vendorRequisitionItem1 = vendorRequisitionItemService
+				.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 25l, 61l);
+		final VendorRequisitionItem vendorRequisitionItem2 = vendorRequisitionItemService
+				.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 26l, 62l);
+		final VendorRequisitionItem vendorRequisitionItem3 = vendorRequisitionItemService
+				.findByQuotationIdAndVendorIdAndRequisitionItemId(quotation.getId(), 27l, 63l);
 		final PurchaseOrder purchaseOrder = new PurchaseOrder();
 		purchaseOrder.setCommonAudit(getCreateCommonAudit());
 		purchaseOrder.setQuotation(quotation);
 		purchaseOrder.setRemark("Done");
-		
-		purchaseOrderService.save(purchaseOrder );
-		
-		final List<VendorRequisitionItem> items = Arrays.asList(vendorRequisitionItem1,vendorRequisitionItem2,vendorRequisitionItem3);
-		
+
+		purchaseOrderService.save(purchaseOrder);
+
+		final List<VendorRequisitionItem> items = Arrays.asList(vendorRequisitionItem1, vendorRequisitionItem2,
+				vendorRequisitionItem3);
+
 		for (VendorRequisitionItem vendorRequisitionItem : items) {
 
 			final RequisitionItem requisitionItem = requisitionItemService
@@ -231,13 +301,10 @@ public class DataScript {
 			vendorRequisitionItem.getCommonAudit().setUpdatedBy("Vendor");
 			vendorRequisitionItem.getCommonAudit().setUpdatedAt(new Date());
 			vendorRequisitionItem.setPurchaseOrder(purchaseOrder);
-			
+
 			final VendorRequisitionItem vri = vendorRequisitionItemService.save(vendorRequisitionItem);
 			System.out.println("Updated VendorRequisitionItem " + vri.getId());
 		}
-		
-	
-		
 
 	}
 
@@ -332,9 +399,9 @@ public class DataScript {
 
 			}
 		}
-		
-		final Requisition r= requisitionService.findById(requisition.getId());
-		final List<RequisitionItem> ris =r.getRequisitionItems();
+
+		final Requisition r = requisitionService.findById(requisition.getId());
+		final List<RequisitionItem> ris = r.getRequisitionItems();
 
 	}
 
@@ -562,16 +629,15 @@ public class DataScript {
 			final Project project = new Project();
 			project.setName("Project" + i);
 			project.setDescription("Project" + i + " Desc");
-			if(i%2==0) {
-				
+			if (i % 2 == 0) {
+
 				project.setActive(true);
 				project.setSubDivisionName("Div2");
-			}
-			else {
-				project.setActive(false);
+			} else {
+				project.setActive(true);
 				project.setSubDivisionName("Div1");
 			}
-				
+
 			try {
 
 				String currentDate = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -584,8 +650,6 @@ public class DataScript {
 			}
 			project.setAddress("Mumbai" + i);
 			project.setRemark("Test" + i);
-			
-			
 
 			final ContactPerson contactPerson = new ContactPerson();
 			contactPerson.setName("Harshad" + i);
@@ -685,10 +749,10 @@ public class DataScript {
 		role3.setPriviliges(privileges3);
 		final Role r3 = roleService.save(role3);
 		System.out.println("Role Created " + r3);
-		
+
 		final Role superRole = roleService.findByName("ROLE_SUPER");
-		final List<Privilege> privileges  = (List<Privilege>) superRole.getPriviliges();  
-		System.out.println("Role Privileges : "+privileges);
+		final List<Privilege> privileges = (List<Privilege>) superRole.getPriviliges();
+		System.out.println("Role Privileges : " + privileges);
 
 	}
 
@@ -737,7 +801,7 @@ public class DataScript {
 		user1.setProjects(projects);
 		final User u1 = userService.save(user1);
 		System.out.println("User Created " + u1);
-		
+
 		final User u = userService.findByUserName("harshad.gaikwad");
 
 	}

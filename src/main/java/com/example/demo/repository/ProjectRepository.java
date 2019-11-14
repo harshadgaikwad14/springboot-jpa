@@ -14,27 +14,29 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.Project;
 
 @Repository
-public interface ProjectRepository extends PagingAndSortingRepository<Project, Long>, JpaSpecificationExecutor<Project> {
+public interface ProjectRepository
+		extends PagingAndSortingRepository<Project, Long>, JpaSpecificationExecutor<Project> {
 
 	public Project findByName(final String name);
-	public Page<Project> findByActive(final boolean active,Pageable pageable);
+
+	public Page<Project> findByActive(final boolean active, Pageable pageable);
+
 	public Page<Project> findBySubDivisionName(final String subDivisionName, Pageable pageable);
-	
+
 	@Query("select p from Project p where p.id in :ids")
-    List<Project> queryIn(@Param("ids") List<Long> ids,Pageable pageable);
+	List<Project> queryIn(@Param("ids") List<Long> ids, Pageable pageable);
 
-    List<Project> findByIdIn(List<Long> ids,Pageable pageable);
-    
-    public Page<Project> findAll(Specification<Project> spec, Pageable pageable);
+	List<Project> findByIdIn(List<Long> ids, Pageable pageable);
 
-    default List<Project> findIn(List<Long> ids,Pageable pageable) {
-        return findAll((root, criteriaQuery, criteriaBuilder) -> {
-            if (ids.isEmpty()) {
-                return null; // or criteriaBuilder.conjunction()
-            } else {
-                return root.get("id").in(ids);
-            }
-        });
-    }
+	public Page<Project> findAll(Specification<Project> spec, Pageable pageable);
+
+	default List<Project> findIn(List<Long> ids, Pageable pageable) {
+		return findAll((root, criteriaQuery, criteriaBuilder) -> {
+			if (ids.isEmpty()) {
+				return null; // or criteriaBuilder.conjunction()
+			} else {
+				return root.get("id").in(ids);
+			}
+		});
+	}
 }
-

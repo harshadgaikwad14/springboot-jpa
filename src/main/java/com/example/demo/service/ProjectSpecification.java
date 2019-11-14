@@ -32,6 +32,18 @@ public class ProjectSpecification {
 		};
 	}
 	
+	/*
+	 * public static <Project> Map<Project, Long>
+	 * groupBySubDivisionName(Specification<Project> s) {
+	 * 
+	 * 
+	 * (root, query, cb) -> { query.groupBy(root.get("subDivisionName")); return
+	 * cb.equal(root.get("active"), true); };
+	 * 
+	 * return null; }
+	 */
+	
+	
 	public static Specification<Project> likeAddressOrSubDivisionContains(String address,String subDivisionName) {
         return (root, query, cb) -> {
             final String containsLikePattern1 = getContainsLikePattern(address);
